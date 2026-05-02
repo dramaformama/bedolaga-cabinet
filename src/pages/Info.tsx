@@ -67,7 +67,7 @@ export default function Info() {
       {/* Заголовок */}
       <div className="flex items-center gap-3">
         <StarIcon />
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">Статус</h1>
+        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('info.loyalty')}</h1>
       </div>
 
       {/* Контент */}

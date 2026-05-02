@@ -87,7 +87,7 @@ export function DesktopSidebar({
     ...(hasContests ? [{ path: '/contests', label: t('nav.contests'), icon: GamepadIcon }] : []),
     ...(hasPolls ? [{ path: '/polls', label: t('nav.polls'), icon: ClipboardIcon }] : []),
     ...(wheelEnabled ? [{ path: '/wheel', label: t('nav.wheel'), icon: WheelIcon }] : []),
-    { path: '/info', label: 'Статус', icon: StarIcon },
+    { path: '/info', label: t('nav.loyalty'), icon: StarIcon },
   ];
 
   const handleNavClick = () => {
