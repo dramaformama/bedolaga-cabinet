@@ -262,7 +262,7 @@ export function AppShell({ children }: AppShellProps) {
     { path: '/subscriptions', label: t('nav.subscription'), icon: SubscriptionIcon },
     { path: '/balance', label: t('nav.balance'), icon: CreditCardIcon },
     { path: '/support', label: t('nav.support'), icon: ChatIcon },
-    { path: '/info', label: t('nav.loyalty'), icon: StarIcon },
+    { path: '/info', label: t('info.loyalty'), icon: StarIcon },
     { path: '/profile', label: t('nav.profile'), icon: UserIcon },
   ];
 
