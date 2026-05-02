@@ -807,7 +807,7 @@ export default function Profile() {
       <motion.div variants={staggerItem}>
         <Card className="p-6">
           <h2 className="mb-4 text-lg font-semibold text-dark-50">Документы</h2>
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <a
               href="https://berlin-connection.ru/docs/docs.html#agreement"
               target="_blank"
@@ -816,6 +816,7 @@ export default function Profile() {
             >
               Пользовательское соглашение
             </a>
+            <span className="text-dark-700">·</span>
             <a
               href="https://berlin-connection.ru/docs/docs.html#policy"
               target="_blank"
@@ -824,6 +825,7 @@ export default function Profile() {
             >
               Политика конфиденциальности
             </a>
+            <span className="text-dark-700">·</span>
             <a
               href="https://berlin-connection.ru/docs/docs.html#soglasie"
               target="_blank"
