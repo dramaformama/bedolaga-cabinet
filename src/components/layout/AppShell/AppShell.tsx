@@ -20,7 +20,7 @@ import CampaignBonusNotifier from '@/components/CampaignBonusNotifier';
 import SuccessNotificationModal from '@/components/SuccessNotificationModal';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import TicketNotificationBell from '@/components/TicketNotificationBell';
-import { SubscriptionIcon, GiftIcon } from '@/components/icons';
+import { SubscriptionIcon, GiftIcon, StarIcon } from '@/components/icons';
 
 import { MobileBottomNav } from './MobileBottomNav';
 import { AppHeader } from './AppHeader';
@@ -262,7 +262,7 @@ export function AppShell({ children }: AppShellProps) {
     { path: '/subscriptions', label: t('nav.subscription'), icon: SubscriptionIcon },
     { path: '/balance', label: t('nav.balance'), icon: CreditCardIcon },
     { path: '/support', label: t('nav.support'), icon: ChatIcon },
-    { path: '/info', label: t('nav.info'), icon: InfoIcon },
+    { path: '/info', label: t('nav.loyalty'), icon: StarIcon },
     { path: '/profile', label: t('nav.profile'), icon: UserIcon },
   ];
 
