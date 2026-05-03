@@ -292,7 +292,10 @@ export function AppShell({ children }: AppShellProps) {
         <div className="mx-auto grid h-14 max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-4 px-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5" onClick={handleNavClick}>
-            <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-dark-800">
+            <div
+              className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-dark-800"
+              style={{ boxShadow: '0 0 0 1px rgba(248,161,13,0.25), 0 4px 12px rgba(0,0,0,0.4)' }}
+            >
               <span
                 className={cn(
                   'absolute text-sm font-bold text-accent-400 transition-opacity duration-200',
@@ -312,7 +315,12 @@ export function AppShell({ children }: AppShellProps) {
                 />
               )}
             </div>
-            <span className="text-base font-semibold text-dark-100">{appName}</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-base font-semibold text-dark-100">{appName}</span>
+              <span className="mt-0.5 text-[9px] font-bold uppercase tracking-[.14em] text-accent-400">
+                VPN SERVICE
+              </span>
+            </div>
           </Link>
 
           {/* Center Navigation */}
