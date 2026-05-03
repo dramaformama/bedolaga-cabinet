@@ -196,7 +196,8 @@ export function AppHeader({
               <div
                 className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-dark-800/80"
                 style={{
-                  boxShadow: '0 0 0 1px rgb(var(--color-accent-400)), 0 4px 12px rgba(0,0,0,0.4)',
+                  boxShadow:
+                    '0 0 0 1px rgba(var(--color-accent-400), 0.2), 0 4px 12px rgba(0,0,0,0.4)',
                 }}
               >
                 <span
