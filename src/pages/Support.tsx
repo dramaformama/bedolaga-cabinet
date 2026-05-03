@@ -440,10 +440,13 @@ export default function Support() {
             </div>
             <div>
               <div className="text-sm font-medium text-dark-100">Часто задаваемые вопросы</div>
-              <div className="text-xs text-dark-400">Сначала загляни сюда</div>
+              <div className="text-xs text-dark-400">База знаний сервиса</div>
             </div>
           </div>
-          <Button variant="secondary" onClick={() => openLink('https://berlin-connection.ru/#faq')}>
+          <Button
+            variant="secondary"
+            onClick={() => openLink('https://berlin-connection.ru/faq/qa.html')}
+          >
             Открыть FAQ
           </Button>
         </Card>
