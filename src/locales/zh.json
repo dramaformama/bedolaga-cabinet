@@ -402,6 +402,14 @@
       "selectServersHint": "选择要连接或断开的服务器",
       "noServersAvailable": "没有可管理的服务器"
     },
+    "revoke": {
+      "title": "重新签发订阅",
+      "button": "重新签发订阅",
+      "description": "新链接，设备重置",
+      "warning": "此操作将生成新的连接链接，重置所有已连接设备，并使旧链接失效。继续？",
+      "confirmBtn": "重新签发",
+      "cooldown": "{{minutes}}分{{seconds}}秒后可用"
+    },
     "legacy": {
       "selectTariffTitle": "选择续费套餐",
       "selectTariffDescription": "您的当前订阅是在引入套餐之前创建的。要续费，请选择一个可用的套餐。",
@@ -472,6 +480,20 @@
       "resumeBtn": "恢复",
       "title": "暂停订阅",
       "willBeCharged": "将扣费"
+    },
+    "tvQuickConnect": {
+      "title": "连接电视",
+      "description": "输入电视屏幕上显示的5位代码",
+      "sendBtn": "发送到电视",
+      "badCode": "请输入5位代码（字母和数字）",
+      "sent": "已发送到电视！",
+      "error": "发送到电视失败",
+      "scanTitle": "扫描二维码",
+      "scanDescription": "扫描电视屏幕上的二维码",
+      "scanBtn": "扫描电视二维码",
+      "stopScan": "关闭摄像头",
+      "noCamera": "无法访问摄像头",
+      "codeFound": "找到代码"
     }
   },
   "balance": {
@@ -496,6 +518,24 @@
       },
       "severpay": {
         "description": "通过SeverPay支付"
+      },
+      "etoplatezhi": {
+        "description": "通过Etoplatezhi支付"
+      },
+      "antilopay": {
+        "description": "通过Antilopay支付"
+      },
+      "jupiter": {
+        "description": "通过 Jupiter (FPGate P2P) 使用 SBP 支付"
+      },
+      "donut": {
+        "description": "通过 Donut P2P 使用银行卡或 SBP 支付"
+      },
+      "lava": {
+        "description": "通过 Lava Business 使用银行卡或 SBP 支付"
+      },
+      "apple_iap": {
+        "description": "通过Apple应用内购买支付"
       }
     },
     "transactionHistory": "交易记录",
@@ -1659,6 +1699,12 @@
         "payments_paypear": "PayPear",
         "payments_rollypay": "RollyPay",
         "payments_aurapay": "AuraPay",
+        "payments_etoplatezhi": "Etoplatezhi",
+        "payments_antilopay": "Antilopay",
+        "payments_jupiter": "Jupiter",
+        "payments_donut": "Donut",
+        "payments_lava": "Lava",
+        "payments_apple_iap": "Apple IAP",
         "subs_core": "核心",
         "subs_trial": "试用",
         "subs_pricing": "定价",

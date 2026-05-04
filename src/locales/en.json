@@ -571,6 +571,14 @@
       "selectServersHint": "Select servers to connect or disconnect",
       "noServersAvailable": "No servers available to manage"
     },
+    "revoke": {
+      "title": "Reissue Subscription",
+      "button": "Reissue Subscription",
+      "description": "New link, device reset",
+      "warning": "This will generate a new connection link, reset all connected devices, and invalidate the old link. Continue?",
+      "confirmBtn": "Reissue",
+      "cooldown": "Available in {{minutes}} min {{seconds}} sec"
+    },
     "legacy": {
       "selectTariffTitle": "Select a tariff to renew",
       "selectTariffDescription": "Your current subscription was created before tariffs were introduced. To renew, please select one of the available tariffs.",
@@ -593,6 +601,20 @@
       "label": "Traffic",
       "selectVolume": "Select traffic volume",
       "default": "Default: {{label}}"
+    },
+    "tvQuickConnect": {
+      "title": "Connect TV",
+      "description": "Enter the 5-character code from your TV screen",
+      "sendBtn": "Send to TV",
+      "badCode": "Enter a 5-character code (letters and digits)",
+      "sent": "Sent to TV!",
+      "error": "Failed to send to TV",
+      "scanTitle": "Scan QR Code",
+      "scanDescription": "Scan the QR code from your TV screen",
+      "scanBtn": "Scan QR from TV",
+      "stopScan": "Close camera",
+      "noCamera": "Camera access denied",
+      "codeFound": "Code found"
     }
   },
   "balance": {
@@ -659,6 +681,24 @@
       },
       "aurapay": {
         "description": "Pay via AuraPay"
+      },
+      "etoplatezhi": {
+        "description": "Pay via Etoplatezhi"
+      },
+      "antilopay": {
+        "description": "Pay via Antilopay"
+      },
+      "jupiter": {
+        "description": "Pay via SBP through Jupiter (FPGate P2P)"
+      },
+      "donut": {
+        "description": "Pay by card or SBP through Donut P2P"
+      },
+      "lava": {
+        "description": "Pay by card or SBP through Lava Business"
+      },
+      "apple_iap": {
+        "description": "Pay via Apple In-App Purchase"
       }
     },
     "transactionHistory": "Transaction History",
@@ -1763,7 +1803,17 @@
       "customButtonTypeCallback": "Callback",
       "customButtonTypeUrl": "URL",
       "customButtonCallbackPlaceholder": "callback_data (e.g. back_to_menu)",
-      "customButtonUrlPlaceholder": "https://example.com"
+      "customButtonUrlPlaceholder": "https://example.com",
+      "preview": "Preview",
+      "previewEmpty": "— empty —",
+      "emailSubjectLabel": "Subject",
+      "btnBalance": "Top up balance",
+      "btnPartners": "Referral program",
+      "btnPromocode": "Promo code",
+      "btnConnect": "Connect",
+      "btnSubscription": "Subscription",
+      "btnSupport": "Support",
+      "btnHome": "Home"
     },
     "pinnedMessages": {
       "title": "Pinned Messages",
@@ -1971,6 +2021,12 @@
         "payments_paypear": "PayPear",
         "payments_rollypay": "RollyPay",
         "payments_aurapay": "AuraPay",
+        "payments_etoplatezhi": "Etoplatezhi",
+        "payments_antilopay": "Antilopay",
+        "payments_jupiter": "Jupiter",
+        "payments_donut": "Donut",
+        "payments_lava": "Lava",
+        "payments_apple_iap": "Apple IAP",
         "subs_core": "Core",
         "subs_trial": "Trial",
         "subs_pricing": "Pricing",

@@ -402,6 +402,14 @@
       "selectServersHint": "سرورها را برای اتصال یا قطع انتخاب کنید",
       "noServersAvailable": "سرور قابل مدیریتی وجود ندارد"
     },
+    "revoke": {
+      "title": "صدور مجدد اشتراک",
+      "button": "صدور مجدد اشتراک",
+      "description": "لینک جدید، بازنشانی دستگاه‌ها",
+      "warning": "این عمل لینک اتصال جدیدی تولید می‌کند، همه دستگاه‌های متصل را بازنشانی می‌کند و لینک قدیمی را نامعتبر می‌کند. ادامه؟",
+      "confirmBtn": "صدور مجدد",
+      "cooldown": "در {{minutes}} دقیقه {{seconds}} ثانیه دیگر"
+    },
     "legacy": {
       "selectTariffTitle": "یک تعرفه برای تمدید انتخاب کنید",
       "selectTariffDescription": "اشتراک فعلی شما قبل از معرفی تعرفه‌ها ایجاد شده بود. برای تمدید، لطفاً یکی از تعرفه‌های موجود را انتخاب کنید.",
@@ -472,6 +480,20 @@
       "resumeBtn": "ادامه",
       "title": "توقف اشتراک",
       "willBeCharged": "کسر خواهد شد"
+    },
+    "tvQuickConnect": {
+      "title": "اتصال تلویزیون",
+      "description": "کد ۵ رقمی نمایش داده شده روی صفحه تلویزیون را وارد کنید",
+      "sendBtn": "ارسال به تلویزیون",
+      "badCode": "کد ۵ رقمی وارد کنید (حروف و اعداد)",
+      "sent": "به تلویزیون ارسال شد!",
+      "error": "خطا در ارسال به تلویزیون",
+      "scanTitle": "اسکن کد QR",
+      "scanDescription": "کد QR روی صفحه تلویزیون را اسکن کنید",
+      "scanBtn": "اسکن QR از تلویزیون",
+      "stopScan": "بستن دوربین",
+      "noCamera": "دسترسی به دوربین امکان‌پذیر نیست",
+      "codeFound": "کد پیدا شد"
     }
   },
   "balance": {
@@ -496,6 +518,24 @@
       },
       "severpay": {
         "description": "پرداخت از طریق SeverPay"
+      },
+      "etoplatezhi": {
+        "description": "پرداخت از طریق Etoplatezhi"
+      },
+      "antilopay": {
+        "description": "پرداخت از طریق Antilopay"
+      },
+      "jupiter": {
+        "description": "پرداخت SBP از طریق Jupiter (FPGate P2P)"
+      },
+      "donut": {
+        "description": "پرداخت با کارت یا SBP از طریق Donut P2P"
+      },
+      "lava": {
+        "description": "پرداخت با کارت یا SBP از طریق Lava Business"
+      },
+      "apple_iap": {
+        "description": "پرداخت از طریق Apple In-App Purchase"
       }
     },
     "transactionHistory": "تاریخچه تراکنش‌ها",
@@ -1621,6 +1661,12 @@
         "payments_paypear": "PayPear",
         "payments_rollypay": "RollyPay",
         "payments_aurapay": "AuraPay",
+        "payments_etoplatezhi": "Etoplatezhi",
+        "payments_antilopay": "Antilopay",
+        "payments_jupiter": "Jupiter",
+        "payments_donut": "Donut",
+        "payments_lava": "Lava",
+        "payments_apple_iap": "Apple IAP",
         "subs_core": "هسته",
         "subs_trial": "آزمایشی",
         "subs_pricing": "قیمت‌گذاری",

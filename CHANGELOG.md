@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.51.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.50.0...v1.51.0) (2026-05-04)
+
+
+### Features
+
+* add Antilopay payment provider support ([7d94009](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7d940091fa2b7773eb0be9a7c3c7d48385253ac0))
+* add Apple IAP (apple_iap) payment method support ([5888713](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/58887138fcbe22863cde83d8bf24079ba7925a56))
+* add Etoplatezhi payment provider support ([85a34b1](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/85a34b1947c5e886bd363b57bae557c4fd6021c0))
+* add Jupiter and Donut payment provider support ([7def847](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7def84718b30060580c732efdc7f1de4cc482786))
+* add Lava payment provider support ([b4eb0fa](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b4eb0fa859b1c451acb27254939afa7bb8710737))
+* add subscription reissue button with cooldown timer ([f7cc445](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f7cc445127e010a8e1c1dd471459e87a85996cf5))
+* add TV Quick Connect to connection page for Android TV / Apple TV ([65f9493](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/65f94931c59f081f663d0caefb316a2d15f3f27d))
+* **admin/broadcasts:** add preview buttons for Telegram + Email broadcasts ([d21c663](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d21c6637bf3a26fe7a6a7822eadc93b0de18de83))
+
+
+### Bug Fixes
+
+* **i18n:** add missing broadcast preview locale keys ([7d29285](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7d29285ff6bc13a83080716b3c76c53530d908de))
+* move reissue button to standalone block outside device_limit guard ([60c8353](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/60c835301d151f346028a35950081d4f72e247d3))
+
 ## [1.50.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.49.0...v1.50.0) (2026-04-29)
 
 
