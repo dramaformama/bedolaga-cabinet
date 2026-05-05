@@ -245,7 +245,7 @@ export default function Balance() {
       {renewal30 !== null && (
         <motion.div variants={staggerItem}>
           {canRenew ? (
-            <div className="rounded-linear border border-success-500/30 bg-success-500/10 px-4 py-3 text-sm text-success-400">
+            <div className="rounded-[var(--bento-radius)] border border-success-500/30 bg-success-500/10 px-4 py-3 text-sm text-success-400">
               {t('balance.renewal.sufficient', 'Хватает для продления на 30 дней')}
               {renewal30.discount_percent > 0 && (
                 <span className="ml-2 opacity-70">
@@ -256,8 +256,8 @@ export default function Balance() {
               )}
             </div>
           ) : (
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-linear border border-error-500/30 bg-error-500/10 px-4 py-3 text-sm text-error-400">
-              <span>
+            <div className="flex items-center gap-3 rounded-[var(--bento-radius)] border border-error-500/30 bg-error-500/10 px-4 py-3 text-sm text-error-400">
+              <span className="min-w-0 flex-1">
                 {t('balance.renewal.insufficient', 'Для продления на 30 дней не хватает')}{' '}
                 <span className="font-semibold">
                   {formatAmount(missingRubles!, 2)} {currencySymbol}
@@ -265,6 +265,7 @@ export default function Balance() {
               </span>
               <Button
                 size="sm"
+                className="flex-shrink-0"
                 onClick={() => navigate(`/balance/top-up?amount=${missingRubles!.toFixed(2)}`)}
               >
                 {t('balance.topUp', 'Пополнить')}
