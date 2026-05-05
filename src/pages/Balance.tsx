@@ -6,13 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useAuthStore } from '../store/auth';
 import { balanceApi } from '../api/balance';
+import { subscriptionApi } from '../api/subscription';
 import { useCurrency } from '../hooks/useCurrency';
 import { API } from '../config/constants';
 import type { PaginatedResponse, Transaction } from '../types';
 
 import { Card } from '@/components/data-display/Card';
 import { Button } from '@/components/primitives/Button';
-import { ChevronDownIcon, ChevronRightIcon } from '@/components/icons';
+import { ChevronRightIcon } from '@/components/icons';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 
@@ -87,7 +88,7 @@ export default function Balance() {
   }> | null>(null);
   const [promoSelectCode, setPromoSelectCode] = useState<string | null>(null);
   const [transactionsPage, setTransactionsPage] = useState(1);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
 
   const { data: transactions, isLoading } = useQuery<PaginatedResponse<Transaction>>({
     queryKey: ['transactions', transactionsPage],
@@ -98,6 +99,12 @@ export default function Balance() {
   const { data: paymentMethods } = useQuery({
     queryKey: ['payment-methods'],
     queryFn: balanceApi.getPaymentMethods,
+  });
+
+  const { data: renewalOptions } = useQuery({
+    queryKey: ['renewal-options'],
+    queryFn: () => subscriptionApi.getRenewalOptions(),
+    staleTime: 5 * 60 * 1000,
   });
 
   // Deferred: only fetch saved cards after payment methods loaded to avoid extra request on first render.
@@ -199,6 +206,19 @@ export default function Balance() {
     }
   };
 
+  const PREVIEW_COUNT = 5;
+  const visibleTransactions = showAllTransactions
+    ? transactions?.items
+    : transactions?.items?.slice(0, PREVIEW_COUNT);
+  const hasMore = (transactions?.items?.length ?? 0) > PREVIEW_COUNT;
+
+  const renewal30 = renewalOptions?.find((opt) => opt.period_days === 30) ?? null;
+  const balanceKopeks = balanceData?.balance_kopeks ?? 0;
+  const canRenew = renewal30 !== null && balanceKopeks >= renewal30.price_kopeks;
+  const missingRubles = renewal30
+    ? Math.max(0, (renewal30.price_kopeks - balanceKopeks) / 100)
+    : null;
+
   return (
     <motion.div
       className="space-y-6"
@@ -220,6 +240,83 @@ export default function Balance() {
           </div>
         </Card>
       </motion.div>
+
+      {/* Renewal Hint */}
+      {renewal30 !== null && (
+        <motion.div variants={staggerItem}>
+          {canRenew ? (
+            <div className="rounded-linear border border-success-500/30 bg-success-500/10 px-4 py-3 text-sm text-success-400">
+              {t('balance.renewal.sufficient', 'Хватает для продления на 30 дней')}
+              {renewal30.discount_percent > 0 && (
+                <span className="ml-2 opacity-70">
+                  {t('balance.renewal.discountApplied', '(скидка {{pct}}%)', {
+                    pct: renewal30.discount_percent,
+                  })}
+                </span>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-linear border border-error-500/30 bg-error-500/10 px-4 py-3 text-sm text-error-400">
+              <span>
+                {t('balance.renewal.insufficient', 'Для продления на 30 дней не хватает')}{' '}
+                <span className="font-semibold">
+                  {formatAmount(missingRubles!, 2)} {currencySymbol}
+                </span>
+              </span>
+              <Button
+                size="sm"
+                onClick={() => navigate(`/balance/top-up?amount=${missingRubles!.toFixed(2)}`)}
+              >
+                {t('balance.topUp', 'Пополнить')}
+              </Button>
+            </div>
+          )}
+        </motion.div>
+      )}
+
+      {/* Payment Methods */}
+      {paymentMethods && paymentMethods.length > 0 && (
+        <motion.div variants={staggerItem}>
+          <Card>
+            <h2 className="mb-4 text-lg font-semibold text-dark-100">
+              {t('balance.topUpBalance')}
+            </h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {paymentMethods.map((method) => {
+                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
+                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
+                  defaultValue: '',
+                });
+                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
+                  defaultValue: '',
+                });
+
+                return (
+                  <Card
+                    key={method.id}
+                    interactive={method.is_available}
+                    className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
+                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
+                  >
+                    <div className="font-semibold text-dark-100">
+                      {translatedName || method.name}
+                    </div>
+                    {(translatedDesc || method.description) && (
+                      <div className="mt-1 text-sm text-dark-500">
+                        {translatedDesc || method.description}
+                      </div>
+                    )}
+                    <div className="mt-3 text-xs text-dark-600">
+                      {formatAmount(method.min_amount_kopeks / 100, 0)} –{' '}
+                      {formatAmount(method.max_amount_kopeks / 100, 0)} {currencySymbol}
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Promo Code Section */}
       <motion.div variants={staggerItem}>
@@ -303,176 +400,119 @@ export default function Balance() {
                 }}
                 className="text-xs text-dark-400 hover:text-dark-200"
               >
-                {t('common.cancel', 'Отмена')}
+                {t('common.cancel')}
               </button>
             </motion.div>
           )}
         </Card>
       </motion.div>
 
-      {/* Payment Methods */}
-      {paymentMethods && paymentMethods.length > 0 && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <h2 className="mb-4 text-lg font-semibold text-dark-100">
-              {t('balance.topUpBalance')}
-            </h2>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {paymentMethods.map((method) => {
-                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
-                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
-                  defaultValue: '',
-                });
-                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
-                  defaultValue: '',
-                });
-
-                return (
-                  <Card
-                    key={method.id}
-                    interactive={method.is_available}
-                    className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
-                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
-                  >
-                    <div className="font-semibold text-dark-100">
-                      {translatedName || method.name}
-                    </div>
-                    {(translatedDesc || method.description) && (
-                      <div className="mt-1 text-sm text-dark-500">
-                        {translatedDesc || method.description}
-                      </div>
-                    )}
-                    <div className="mt-3 text-xs text-dark-600">
-                      {formatAmount(method.min_amount_kopeks / 100, 0)} –{' '}
-                      {formatAmount(method.max_amount_kopeks / 100, 0)} {currencySymbol}
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </Card>
-        </motion.div>
-      )}
-
       {/* Transaction History */}
       <motion.div variants={staggerItem}>
-        <Card className="overflow-hidden">
-          <button
-            onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-            className="flex w-full items-center justify-between text-left"
-          >
-            <h2 className="text-lg font-semibold text-dark-100">
-              {t('balance.transactionHistory')}
-            </h2>
-            <ChevronDownIcon
-              className={`h-5 w-5 text-dark-400 transition-transform duration-200 ${isHistoryOpen ? 'rotate-180' : ''}`}
-            />
-          </button>
+        <Card>
+          <h2 className="mb-4 text-lg font-semibold text-dark-100">
+            {t('balance.transactionHistory')}
+          </h2>
 
-          <AnimatePresence>
-            {isHistoryOpen && (
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+            </div>
+          ) : visibleTransactions && visibleTransactions.length > 0 ? (
+            <>
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
+                className="space-y-3"
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
               >
-                <div className="mt-4">
-                  {isLoading ? (
-                    <div className="flex items-center justify-center py-12">
-                      <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-                    </div>
-                  ) : transactions?.items && transactions.items.length > 0 ? (
+                {visibleTransactions.map((tx) => {
+                  const isZero = tx.amount_rubles === 0;
+                  const isPositive = tx.amount_rubles > 0;
+                  const displayAmount = Math.abs(tx.amount_rubles);
+                  const sign = isZero ? '' : isPositive ? '+' : '-';
+                  const colorClass = isZero
+                    ? 'text-dark-400'
+                    : isPositive
+                      ? 'text-success-400'
+                      : 'text-error-400';
+
+                  return (
                     <motion.div
-                      className="space-y-3"
-                      variants={staggerContainer}
-                      initial="initial"
-                      animate="animate"
+                      key={tx.id}
+                      variants={staggerItem}
+                      className="flex items-center justify-between rounded-linear border border-dark-700/30 bg-dark-800/30 p-4"
                     >
-                      {transactions.items.map((tx) => {
-                        const isZero = tx.amount_rubles === 0;
-                        const isPositive = tx.amount_rubles > 0;
-                        const displayAmount = Math.abs(tx.amount_rubles);
-                        const sign = isZero ? '' : isPositive ? '+' : '-';
-                        const colorClass = isZero
-                          ? 'text-dark-400'
-                          : isPositive
-                            ? 'text-success-400'
-                            : 'text-error-400';
-
-                        return (
-                          <motion.div
-                            key={tx.id}
-                            variants={staggerItem}
-                            className="flex items-center justify-between rounded-linear border border-dark-700/30 bg-dark-800/30 p-4"
-                          >
-                            <div className="flex-1">
-                              <div className="mb-1 flex items-center gap-3">
-                                <span className={getTypeBadge(tx.type)}>
-                                  {getTypeLabel(tx.type)}
-                                </span>
-                                <span className="text-xs text-dark-500">
-                                  {new Date(tx.created_at).toLocaleDateString()}
-                                </span>
-                              </div>
-                              {tx.description && (
-                                <div className="text-sm text-dark-400">{tx.description}</div>
-                              )}
-                            </div>
-                            <div className={`text-lg font-semibold ${colorClass}`}>
-                              {sign}
-                              {formatAmount(displayAmount)} {currencySymbol}
-                            </div>
-                          </motion.div>
-                        );
-                      })}
+                      <div className="flex-1">
+                        <div className="mb-1 flex items-center gap-3">
+                          <span className={getTypeBadge(tx.type)}>{getTypeLabel(tx.type)}</span>
+                          <span className="text-xs text-dark-500">
+                            {new Date(tx.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        {tx.description && (
+                          <div className="text-sm text-dark-400">{tx.description}</div>
+                        )}
+                      </div>
+                      <div className={`text-lg font-semibold ${colorClass}`}>
+                        {sign}
+                        {formatAmount(displayAmount)} {currencySymbol}
+                      </div>
                     </motion.div>
-                  ) : (
-                    <div className="py-12 text-center">
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-linear-lg bg-dark-800">
-                        <WalletIcon className="h-8 w-8 text-dark-500" />
-                      </div>
-                      <div className="text-dark-400">{t('balance.noTransactions')}</div>
-                    </div>
-                  )}
-
-                  {transactions && transactions.pages > 1 && (
-                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-dark-500">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setTransactionsPage((prev) => Math.max(1, prev - 1))}
-                        disabled={transactions.page <= 1}
-                        className="min-w-[120px] flex-1 sm:flex-none"
-                      >
-                        {t('common.back')}
-                      </Button>
-                      <div className="flex-1 text-center">
-                        {t('balance.page', {
-                          current: transactions.page,
-                          total: transactions.pages,
-                        })}
-                      </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() =>
-                          setTransactionsPage((prev) =>
-                            transactions.pages ? Math.min(transactions.pages, prev + 1) : prev + 1,
-                          )
-                        }
-                        disabled={transactions.page >= transactions.pages}
-                        className="min-w-[120px] flex-1 sm:flex-none"
-                      >
-                        {t('common.next')}
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                  );
+                })}
               </motion.div>
-            )}
-          </AnimatePresence>
+
+              {(hasMore || showAllTransactions) && (
+                <button
+                  onClick={() => setShowAllTransactions((prev) => !prev)}
+                  className="mt-4 w-full text-center text-sm text-dark-400 transition-colors hover:text-dark-200"
+                >
+                  {showAllTransactions ? t('common.collapse') : t('common.all')}
+                </button>
+              )}
+
+              {showAllTransactions && transactions && transactions.pages > 1 && (
+                <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-dark-500">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setTransactionsPage((prev) => Math.max(1, prev - 1))}
+                    disabled={transactions.page <= 1}
+                    className="min-w-[120px] flex-1 sm:flex-none"
+                  >
+                    {t('common.back')}
+                  </Button>
+                  <div className="flex-1 text-center">
+                    {t('balance.page', {
+                      current: transactions.page,
+                      total: transactions.pages,
+                    })}
+                  </div>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      setTransactionsPage((prev) =>
+                        transactions.pages ? Math.min(transactions.pages, prev + 1) : prev + 1,
+                      )
+                    }
+                    disabled={transactions.page >= transactions.pages}
+                    className="min-w-[120px] flex-1 sm:flex-none"
+                  >
+                    {t('common.next')}
+                  </Button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="py-12 text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-linear-lg bg-dark-800">
+                <WalletIcon className="h-8 w-8 text-dark-500" />
+              </div>
+              <div className="text-dark-400">{t('balance.noTransactions')}</div>
+            </div>
+          )}
         </Card>
       </motion.div>
 
