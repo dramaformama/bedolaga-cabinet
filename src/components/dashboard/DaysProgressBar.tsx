@@ -27,7 +27,13 @@ export default function DaysProgressBar({ daysLeft, startDate, endDate }: DaysPr
   const colorRaw = colorVar;
 
   return (
-    <div role="progressbar" aria-valuenow={daysLeft} aria-valuemin={0} aria-valuemax={totalDays}>
+    <div
+      role="progressbar"
+      aria-valuenow={daysLeft}
+      aria-valuemin={0}
+      aria-valuemax={totalDays}
+      aria-label={`${daysLeft} / ${totalDays} days remaining`}
+    >
       <div
         className="relative overflow-hidden"
         style={{

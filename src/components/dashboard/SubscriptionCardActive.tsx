@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
-import { Link } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { UseMutationResult } from '@tanstack/react-query';
 import DaysProgressBar from './DaysProgressBar';
 import { useTheme } from '../../hooks/useTheme';
@@ -242,7 +241,7 @@ export default function SubscriptionCardActive({
             }
             navigate(`/connection?sub=${subscription.id}`);
           }}
-          className={`mb-3 flex w-full items-center gap-3 rounded-[14px] p-3.5 text-left transition-shadow duration-300${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
+          className={`mb-3 flex w-full items-center gap-3 rounded-[14px] p-3.5 text-left transition-shadow duration-300 ${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
           data-onboarding="connect-devices"
           style={{ fontFamily: 'inherit' }}
         >
@@ -316,10 +315,12 @@ export default function SubscriptionCardActive({
       {/* ─── Footer: refresh + view link ─── */}
       <div className="flex items-center justify-between px-0.5">
         <button
+          type="button"
           onClick={() => refreshTrafficMutation.mutate()}
           disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
-          className="flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium text-dark-50/30 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-40"
           aria-label={t('common.refresh')}
+          aria-busy={refreshTrafficMutation.isPending}
+          className="flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium text-dark-50/30 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <RefreshIcon
             className={`h-3 w-3 ${refreshTrafficMutation.isPending ? 'animate-spin' : ''}`}
