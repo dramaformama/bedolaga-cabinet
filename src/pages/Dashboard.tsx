@@ -20,12 +20,7 @@ import { promoApi } from '../api/promo';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { API } from '../config/constants';
-
-const ChevronRightIcon = () => (
-  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-  </svg>
-);
+import { ChevronRightIcon } from '@/components/icons';
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -252,7 +247,7 @@ export default function Dashboard() {
           {t('dashboard.welcome', { name: user?.first_name || user?.username || '' })}
         </h1>
         <div className="mt-1 flex flex-wrap items-center gap-2">
-          <p className="text-dark-400">{t('dashboard.yourSubscription')}</p>
+          {!hasNoSubscription && <p className="text-dark-400">{t('dashboard.yourSubscription')}</p>}
           {promoGroupData?.group_name && (
             <span
               className="inline-flex max-w-[160px] items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
@@ -363,16 +358,16 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Promo Offers */}
-      <PromoOffersSection />
-
-      {/* Stats Grid */}
+      {/* Stats Grid — balance + referrals, above promo to prioritise key metrics */}
       <StatsGrid
         balanceRubles={balanceData?.balance_rubles || 0}
         referralCount={referralInfo?.total_referrals || 0}
         earningsRubles={referralInfo?.available_balance_rubles || 0}
         refLoading={refLoading}
       />
+
+      {/* Promo Offers */}
+      <PromoOffersSection />
 
       {/* Fortune Wheel Banner */}
       {wheelConfig?.is_enabled && (
