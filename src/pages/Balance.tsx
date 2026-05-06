@@ -101,7 +101,7 @@ export default function Balance() {
     placeholderData: (previousData) => previousData,
   });
 
-  const { data: paymentMethods } = useQuery({
+  const { data: paymentMethods, isLoading: paymentMethodsLoading } = useQuery({
     queryKey: ['payment-methods'],
     queryFn: balanceApi.getPaymentMethods,
   });
@@ -309,47 +309,69 @@ export default function Balance() {
       )}
 
       {/* Payment Methods */}
-      {paymentMethods && paymentMethods.length > 0 && (
+      {paymentMethodsLoading ? (
         <motion.div variants={staggerItem}>
           <Card>
-            <h2 className="mb-4 text-lg font-semibold text-dark-100">
-              {t('balance.topUpBalance')}
-            </h2>
+            <div className="skeleton mb-4 h-6 w-36" />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {paymentMethods.map((method) => {
-                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
-                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
-                  defaultValue: '',
-                });
-                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
-                  defaultValue: '',
-                });
-
-                return (
-                  <Card
-                    key={method.id}
-                    interactive={method.is_available}
-                    className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
-                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
-                  >
-                    <div className="font-semibold text-dark-100">
-                      {translatedName || method.name}
-                    </div>
-                    {(translatedDesc || method.description) && (
-                      <div className="mt-1 text-sm text-dark-500">
-                        {translatedDesc || method.description}
-                      </div>
-                    )}
-                    <div className="mt-3 text-xs text-dark-600">
-                      {formatAmount(method.min_amount_kopeks / 100, 0)} –{' '}
-                      {formatAmount(method.max_amount_kopeks / 100, 0)} {currencySymbol}
-                    </div>
-                  </Card>
-                );
-              })}
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-[var(--bento-radius)] border border-dark-700/30 p-4"
+                >
+                  <div className="skeleton mb-2 h-4 w-24" />
+                  <div className="skeleton h-3 w-32" />
+                </div>
+              ))}
             </div>
           </Card>
         </motion.div>
+      ) : (
+        paymentMethods &&
+        paymentMethods.length > 0 && (
+          <motion.div variants={staggerItem}>
+            <Card>
+              <h2 className="mb-4 text-lg font-semibold text-dark-100">
+                {t('balance.topUpBalance')}
+              </h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {paymentMethods.map((method) => {
+                  const methodKey = method.id.toLowerCase().replace(/-/g, '_');
+                  const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
+                    defaultValue: '',
+                  });
+                  const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
+                    defaultValue: '',
+                  });
+
+                  return (
+                    <Card
+                      key={method.id}
+                      interactive={method.is_available}
+                      className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
+                      onClick={() =>
+                        method.is_available && navigate(`/balance/top-up/${method.id}`)
+                      }
+                    >
+                      <div className="font-semibold text-dark-100">
+                        {translatedName || method.name}
+                      </div>
+                      {(translatedDesc || method.description) && (
+                        <div className="mt-1 text-sm text-dark-500">
+                          {translatedDesc || method.description}
+                        </div>
+                      )}
+                      <div className="mt-3 text-xs text-dark-600">
+                        {formatAmount(method.min_amount_kopeks / 100, 0)} –{' '}
+                        {formatAmount(method.max_amount_kopeks / 100, 0)} {currencySymbol}
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </Card>
+          </motion.div>
+        )
       )}
 
       {/* Promo Code Section */}
