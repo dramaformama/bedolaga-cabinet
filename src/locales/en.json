@@ -468,6 +468,11 @@
     "confirmDeleteAllDevices": "Delete all devices?",
     "deviceDeleted": "Device deleted",
     "allDevicesDeleted": "All devices deleted",
+    "renameDevice": "Rename",
+    "renameDeviceSave": "Save",
+    "renameDeviceCancel": "Cancel",
+    "renameDevicePlaceholder": "Device name",
+    "deviceRenamed": "Device name updated",
     "platform": "Platform",
     "model": "Model",
     "connectedAt": "Connected",
@@ -3176,7 +3181,10 @@
           "none": "No connected devices",
           "resetAll": "Reset all",
           "deleted": "Device removed",
-          "allDeleted": "All devices reset"
+          "allDeleted": "All devices reset",
+          "rename": "Rename",
+          "renameSave": "Save",
+          "renamed": "Device name updated"
         },
         "referral": {
           "title": "Referral program",
@@ -4658,6 +4666,13 @@
       "defaultMessage": "Your account has been blocked.",
       "reason": "Reason",
       "contactSupport": "If you believe this is an error, please contact support."
+    },
+    "accountDeleted": {
+      "title": "Account deactivated",
+      "description": "Your account was deactivated after a long period of inactivity. To restore access, open the bot in Telegram and send /start.",
+      "openBot": "Open the bot",
+      "retry": "I pressed /start, retry",
+      "hint": "After running /start, return here and tap «Retry»."
     }
   },
   "merge": {
