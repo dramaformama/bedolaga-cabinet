@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { usePlatform } from '@/platform';
+import { copyToClipboard } from '@/utils/clipboard';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../store/auth';
+import { displayName } from '../utils/displayName';
 import { authApi } from '../api/auth';
 import { isValidEmail } from '../utils/validation';
 import {
@@ -114,7 +116,7 @@ export default function Profile() {
 
   const copyReferralLink = () => {
     if (referralLink) {
-      navigator.clipboard.writeText(referralLink);
+      void copyToClipboard(referralLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -139,7 +141,7 @@ export default function Profile() {
     }
 
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`;
-    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+    openTelegramLink(telegramUrl);
   };
 
   const resendVerificationMutation = useMutation({
@@ -191,7 +193,8 @@ export default function Profile() {
       setChangeEmailStep('success');
       const updatedUser = await authApi.getMe();
       setUser(updatedUser);
-      queryClient.invalidateQueries({ queryKey: ['user'] });
+      // Note: auth user lives in the zustand store, not in React Query —
+      // the explicit setUser above IS the refresh. No ['user'] query exists.
     },
     onError: (err: { response?: { data?: { detail?: string } } }) => {
       const detail = err.response?.data?.detail;
@@ -223,7 +226,7 @@ export default function Profile() {
   }, [verificationResendCooldown]);
 
   // Auto-focus inputs on step change (skip on Telegram — keyboard hides bottom nav)
-  const { platform: profilePlatform } = usePlatform();
+  const { platform: profilePlatform, openTelegramLink } = usePlatform();
   useEffect(() => {
     if (profilePlatform === 'telegram') return;
     const timer = setTimeout(() => {
@@ -333,9 +336,7 @@ export default function Profile() {
             )}
             <div className="flex items-center justify-between border-b border-dark-800/50 py-3">
               <span className="text-dark-400">{t('profile.name')}</span>
-              <span className="font-medium text-dark-100">
-                {user?.first_name} {user?.last_name}
-              </span>
+              <span className="font-medium text-dark-100">{displayName(user)}</span>
             </div>
             <div className="flex items-center justify-between py-3">
               <span className="text-dark-400">{t('profile.registeredAt')}</span>

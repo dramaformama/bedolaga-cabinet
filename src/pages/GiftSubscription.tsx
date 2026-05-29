@@ -19,6 +19,7 @@ import { cn } from '../lib/utils';
 import { copyToClipboard } from '../utils/clipboard';
 import { getApiErrorMessage } from '../utils/api-error';
 import { formatPrice } from '../utils/format';
+import { useCurrency } from '../hooks/useCurrency';
 import { usePlatform, useHaptic } from '@/platform';
 
 function GiftIcon({ className }: { className?: string }) {
@@ -710,10 +711,10 @@ function BuyTabContent({
 
       {/* Active discount banner */}
       {config.active_discount_percent != null && config.active_discount_percent > 0 && (
-        <div className="flex items-center gap-3 rounded-xl border border-orange-500/30 bg-orange-500/10 p-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-500/20">
+        <div className="flex items-center gap-3 rounded-xl border border-warning-500/30 bg-warning-500/10 p-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-warning-500/20">
             <svg
-              className="h-4 w-4 text-orange-400"
+              className="h-4 w-4 text-warning-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -724,7 +725,7 @@ function BuyTabContent({
               <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
             </svg>
           </div>
-          <div className="text-sm font-medium text-orange-400">
+          <div className="text-sm font-medium text-warning-400">
             {t('promo.discountApplied')} -{config.active_discount_percent}%
           </div>
         </div>
@@ -1285,6 +1286,9 @@ const tabContentVariants = {
 export default function GiftSubscription() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
+
+  // Прогреваем кэш курсов валют для formatPrice (см. QuickPurchase).
+  useCurrency();
 
   // URL params: ?tab=activate&code=TOKEN for auto-activation
   const urlTab = searchParams.get('tab') as TabId | null;

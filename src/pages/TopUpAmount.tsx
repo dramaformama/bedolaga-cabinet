@@ -13,6 +13,8 @@ import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import type { PaymentMethod, PaymentMethodOption } from '../types';
 import BentoCard from '../components/ui/BentoCard';
 import { saveTopUpPendingInfo } from '../utils/topUpStorage';
+import { getSafeRedirectPath } from '../utils/safeRedirect';
+import { copyToClipboard } from '@/utils/clipboard';
 
 // Icons
 const StarIcon = () => (
@@ -144,7 +146,12 @@ export default function TopUpAmount() {
   }, [navigate]);
 
   const handleSuccess = useCallback(() => {
-    navigate(returnTo || '/balance', { replace: true });
+    // returnTo arrives via query string — validate as an in-app path before
+    // navigate(), otherwise an absolute or encoded URL produces ugly
+    // path artefacts in the URL bar. The validator returns '/' for invalid
+    // input; treat that case as "no returnTo" and use the /balance default.
+    const safe = getSafeRedirectPath(returnTo);
+    navigate(returnTo && safe !== '/' ? safe : '/balance', { replace: true });
   }, [navigate, returnTo]);
 
   // Keyboard: Escape to go back
@@ -170,7 +177,8 @@ export default function TopUpAmount() {
       : converted.toFixed(2);
   };
 
-  const [amount, setAmount] = useState(getInitialAmount);
+  const initialDisplayAmount = getInitialAmount();
+  const [amount, setAmount] = useState(initialDisplayAmount);
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(
     getPreferredOptionId(method?.options),
@@ -254,9 +262,8 @@ export default function TopUpAmount() {
     onSuccess: (data) => {
       const redirectUrl = data.payment_url || data.invoice_url;
       if (redirectUrl) {
-        setPaymentUrl(redirectUrl);
-
-        // Save payment info for the result page
+        // Save payment info for the result page (do BEFORE possible redirect,
+        // иначе после window.location.href этот код не выполнится).
         if (method && data.payment_id) {
           const methodKey = method.id.toLowerCase().replace(/-/g, '_');
           const displayName =
@@ -269,6 +276,29 @@ export default function TopUpAmount() {
             created_at: Date.now(),
           });
         }
+
+        // open_url_direct: seamless флоу как при покупке подарка.
+        // window.location.href внутри Telegram MiniApp WebView навигирует
+        // в том же контейнере без открытия внешнего браузера. После
+        // оплаты return_url возвращает на /balance/top-up/result.
+        //
+        // t.me/ URL (Telegram Stars, CryptoBot) — всегда через нативный
+        // handler (openInvoice / openTelegramLink в setPaymentUrl-ветке).
+        // Stars уже отбит раньше через starsPaymentMutation, здесь — защита
+        // на случай CryptoBot и других Telegram-deep-link провайдеров.
+        // toLowerCase для устойчивости к редким провайдерам, которые могут вернуть
+        // URL в нестандартном регистре. Также покрываем tg:// scheme на всякий случай.
+        const lowerUrl = redirectUrl.toLowerCase();
+        const isTelegramDeepLink =
+          lowerUrl.startsWith('https://t.me/') ||
+          lowerUrl.startsWith('http://t.me/') ||
+          lowerUrl.startsWith('tg://');
+        if (method?.open_url_direct && !isTelegramDeepLink) {
+          window.location.href = redirectUrl;
+          return;
+        }
+
+        setPaymentUrl(redirectUrl);
       }
     },
     onError: (err: unknown) => {
@@ -334,7 +364,22 @@ export default function TopUpAmount() {
       return;
     }
 
-    const amountKopeks = Math.round(amountRubles * 100);
+    // Сохраняем canonical RUB amount если юзер НЕ редактировал префилл.
+    // Display-rounding в `.toFixed(2)` теряет точность: 150₽ при rate=90.66 → "1.65" USD
+    // (округление вниз с 1.6545), back-конвертация даёт 1.65 × 90.66 = 149.589₽ < 150₽
+    // → юзер не может купить подписку 150₽. С canonical RUB обходим FX round-trip.
+    //
+    // Math.ceil для не-RUB локалей покрывает остаточные sub-копеечные ошибки
+    // floating-point, когда юзер реально вводит свой amount.
+    const userEditedAmount = amount.trim() !== initialDisplayAmount.trim();
+    let amountKopeks: number;
+    if (!userEditedAmount && initialAmountRubles && initialAmountRubles > 0) {
+      amountKopeks = Math.round(initialAmountRubles * 100);
+    } else if (targetCurrency === 'RUB') {
+      amountKopeks = Math.round(amountRubles * 100);
+    } else {
+      amountKopeks = Math.ceil(amountRubles * 100);
+    }
     if (isStarsMethod) {
       starsPaymentMutation.mutate(amountKopeks);
     } else {
@@ -362,7 +407,7 @@ export default function TopUpAmount() {
   const handleCopyUrl = async () => {
     if (!paymentUrl) return;
     try {
-      await navigator.clipboard.writeText(paymentUrl);
+      await copyToClipboard(paymentUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -467,7 +512,7 @@ export default function TopUpAmount() {
                 ? 'cursor-not-allowed bg-dark-700 text-dark-500'
                 : isStarsMethod
                   ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg shadow-yellow-500/25 hover:from-yellow-400 hover:to-orange-400 active:from-yellow-600 active:to-orange-600'
-                  : 'bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/25 hover:from-accent-400 hover:to-accent-500 active:from-accent-600 active:to-accent-700'
+                  : 'bg-accent-500 text-white shadow-lg shadow-accent-500/25 transition-colors hover:bg-accent-400 active:bg-accent-600'
             }`}
           >
             {isPending ? (
@@ -484,7 +529,7 @@ export default function TopUpAmount() {
 
       {/* Quick amount buttons */}
       {quickAmounts.length > 0 && (
-        <motion.div variants={staggerItem} className="grid grid-cols-4 gap-2">
+        <motion.div variants={staggerItem} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {quickAmounts.map((a) => {
             const val = getQuickValue(a);
             const isSelected = amount === val;

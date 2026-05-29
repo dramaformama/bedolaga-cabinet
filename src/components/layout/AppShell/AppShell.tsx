@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import WebSocketNotifications from '@/components/WebSocketNotifications';
 import CampaignBonusNotifier from '@/components/CampaignBonusNotifier';
 import SuccessNotificationModal from '@/components/SuccessNotificationModal';
+import { PromptDialogHost } from '@/components/PromptDialogHost';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import TicketNotificationBell from '@/components/TicketNotificationBell';
 import { SubscriptionIcon, GiftIcon, StarIcon } from '@/components/icons';
@@ -278,7 +279,7 @@ export function AppShell({ children }: AppShellProps) {
   // headerHeight comes from useHeaderHeight() — accounts for TG safe area in fullscreen
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-viewport">
       {/* Animated background renders via portal on document.body at z-index: -1 */}
       <BackgroundRenderer />
 
@@ -286,6 +287,7 @@ export function AppShell({ children }: AppShellProps) {
       <WebSocketNotifications />
       <CampaignBonusNotifier />
       <SuccessNotificationModal />
+      <PromptDialogHost />
 
       {/* Desktop Header */}
       <header className="fixed left-0 right-0 top-0 z-50 hidden border-b border-dark-800/50 bg-dark-950/95 lg:block">
@@ -333,6 +335,7 @@ export function AppShell({ children }: AppShellProps) {
                 key={item.path}
                 to={item.path}
                 onClick={handleNavClick}
+                aria-label={item.label}
                 className={cn(
                   'group flex items-center rounded-xl px-2.5 py-2 transition-all duration-200',
                   isActive(item.path)
@@ -341,7 +344,7 @@ export function AppShell({ children }: AppShellProps) {
                 )}
               >
                 <item.icon className="h-[18px] w-[18px] shrink-0" />
-                <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
+                <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-focus-within:ml-2 group-focus-within:max-w-40 group-focus-within:opacity-100 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
                   {item.label}
                 </span>
               </Link>
@@ -350,6 +353,7 @@ export function AppShell({ children }: AppShellProps) {
               <Link
                 to="/referral"
                 onClick={handleNavClick}
+                aria-label={t('nav.referral')}
                 className={cn(
                   'group flex items-center rounded-xl px-2.5 py-2 transition-all duration-200',
                   isActive('/referral')
@@ -358,7 +362,7 @@ export function AppShell({ children }: AppShellProps) {
                 )}
               >
                 <UsersIcon className="h-[18px] w-[18px] shrink-0" />
-                <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
+                <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-focus-within:ml-2 group-focus-within:max-w-40 group-focus-within:opacity-100 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
                   {t('nav.referral')}
                 </span>
               </Link>
@@ -367,6 +371,7 @@ export function AppShell({ children }: AppShellProps) {
               <Link
                 to="/gift"
                 onClick={handleNavClick}
+                aria-label={t('nav.gift')}
                 className={cn(
                   'group flex items-center rounded-xl px-2.5 py-2 transition-all duration-200',
                   isActive('/gift')
@@ -375,7 +380,7 @@ export function AppShell({ children }: AppShellProps) {
                 )}
               >
                 <GiftIcon className="h-[18px] w-[18px] shrink-0" />
-                <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
+                <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-focus-within:ml-2 group-focus-within:max-w-40 group-focus-within:opacity-100 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
                   {t('nav.gift')}
                 </span>
               </Link>
@@ -386,6 +391,7 @@ export function AppShell({ children }: AppShellProps) {
                 <Link
                   to="/admin"
                   onClick={handleNavClick}
+                  aria-label={t('admin.nav.title')}
                   className={cn(
                     'group flex items-center rounded-xl px-2.5 py-2 transition-all duration-200',
                     location.pathname.startsWith('/admin')
@@ -394,7 +400,7 @@ export function AppShell({ children }: AppShellProps) {
                   )}
                 >
                   <ShieldIcon className="h-[18px] w-[18px] shrink-0" />
-                  <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
+                  <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-200 group-focus-within:ml-2 group-focus-within:max-w-40 group-focus-within:opacity-100 group-hover:ml-2 group-hover:max-w-40 group-hover:opacity-100">
                     {t('admin.nav.title')}
                   </span>
                 </Link>
@@ -413,6 +419,9 @@ export function AppShell({ children }: AppShellProps) {
                 'rounded-xl border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400',
                 !canToggleTheme && 'pointer-events-none invisible',
               )}
+              aria-label={
+                isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'
+              }
               title={isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
             >
               {isDark ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
