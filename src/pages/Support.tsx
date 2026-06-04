@@ -389,10 +389,7 @@ export default function Support() {
               <div className="text-xs text-dark-400">База знаний сервиса</div>
             </div>
           </div>
-          <Button
-            variant="secondary"
-            onClick={() => openLink('https://berlin-connection.ru/faq/qa.html')}
-          >
+          <Button variant="secondary" onClick={() => openLink('https://berlin-connection.ru/faq')}>
             Открыть FAQ
           </Button>
         </Card>
