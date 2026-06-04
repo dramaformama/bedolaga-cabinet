@@ -18,7 +18,7 @@ import type {
 
 import { Card } from '@/components/data-display/Card';
 import { Button } from '@/components/primitives/Button';
-import { ChevronDownIcon, ChevronRightIcon, CreditCardIcon, WalletIcon } from '@/components/icons';
+import { ChevronRightIcon, CreditCardIcon, WalletIcon } from '@/components/icons';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 
