@@ -1155,6 +1155,9 @@
       "title": "销售统计",
       "subtitle": "收入、试用、订阅和续订",
       "period": {
+        "thisMonth": "本月",
+        "from": "从",
+        "to": "到",
         "week": "7天",
         "month": "30天",
         "quarter": "90天",
@@ -1166,13 +1169,15 @@
         "sales": "销售",
         "renewals": "续订",
         "addons": "附加服务",
-        "deposits": "充值"
+        "deposits": "充值",
+        "payment": "支付"
       },
       "summary": {
         "revenue": "收入",
         "activeSubs": "活跃订阅",
         "activeTrials": "活跃试用",
         "newTrials": "新试用",
+        "newPaid": "新增付费订阅",
         "conversion": "转化率",
         "renewals": "续订",
         "addonRevenue": "附加服务收入",
@@ -1183,13 +1188,13 @@
         "totalRegistrations": "注册数",
         "trialsIssued": "已发放试用",
         "conversion": "转化率",
-        "avgDuration": "平均时长",
         "byProvider": "按注册来源",
         "dailyChart": "每日注册与试用",
         "registrations": "注册"
       },
       "sales": {
         "totalSales": "总销售",
+        "totalRevenue": "订阅流水",
         "avgOrder": "平均订单",
         "topTariff": "热门套餐",
         "byTariff": "按套餐",
@@ -1228,6 +1233,12 @@
         "dailyChart": "每日充值",
         "dailyByMethod": "每日按支付方式充值",
         "revenue": "收入"
+      },
+      "payments": {
+        "successRate": "支付成功率",
+        "attempts": "支付尝试",
+        "failedPurchases": "失败购买",
+        "byGateway": "各网关成功率"
       },
       "loadError": "加载统计失败"
     },
@@ -3682,6 +3693,12 @@
         "dailyChart": "每日购买与收入",
         "tariffChart": "套餐分布",
         "giftBreakdown": "礼物 vs 普通",
+        "funnelTitle": "转化漏斗",
+        "giftClaimTitle": "礼物激活",
+        "giftClaimLabel": "已领取 / 已发送",
+        "dailyRevenue": "每日收入",
+        "byPaymentMethod": "按支付方式",
+        "bySource": "流量来源",
         "purchases": "购买",
         "revenueLabel": "收入",
         "gifts": "礼物",
@@ -4482,6 +4499,36 @@
     "merging": "合并中..."
   },
   "landing": {
+    "giftClaim": {
+      "title": "您收到一份礼物！",
+      "error": "无法激活礼物。",
+      "notFoundTitle": "未找到礼物",
+      "notFoundDesc": "此礼物链接无效或已不可用。",
+      "alreadyTitle": "礼物已激活",
+      "alreadyDesc": "此礼物已被领取。",
+      "successTitle": "礼物已激活！",
+      "connectDesc": "使用此链接连接：",
+      "copyLink": "复制链接",
+      "pendingTitle": "即将完成…",
+      "pendingDesc": "付款仍在确认中。本页面将自动更新。",
+      "replaceWarning": "您已有订阅——激活此礼物将替换它。",
+      "activateTelegram": "在 Telegram 中激活",
+      "activateWeb": "通过邮箱激活",
+      "emailLabel": "您的邮箱",
+      "claimNow": "领取礼物",
+      "failedTitle": "礼物不可用",
+      "failedDesc": "此礼物的付款未成功，无法激活。"
+    },
+    "giftLink": {
+      "shareText": "我送您一份订阅！在此激活：",
+      "viaTelegram": "Telegram：",
+      "title": "礼物已就绪！",
+      "subtitle": "将此链接发送给您想赠送的人——他们自行激活。",
+      "linkLabel": "礼物链接",
+      "telegramLabel": "Telegram 链接",
+      "alsoSent": "我们也已发送到 {{contact}}。",
+      "copyMessage": "复制消息"
+    },
     "notFound": "页面未找到",
     "forMe": "为自己",
     "asGift": "作为礼物",
@@ -4725,6 +4772,7 @@
   "subscriptions": {
     "buy": "购买订阅",
     "buyAnother": "再购买一个订阅",
+    "browsePlans": "查看套餐并订阅",
     "empty": "您还没有订阅",
     "emptyDesc": "选择套餐以开始使用",
     "title": "我的订阅"

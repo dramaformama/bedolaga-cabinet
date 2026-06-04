@@ -1155,6 +1155,9 @@
       "title": "آمار فروش",
       "subtitle": "درآمد، آزمایشی، اشتراک و تمدید",
       "period": {
+        "thisMonth": "این ماه",
+        "from": "از",
+        "to": "تا",
         "week": "۷ روز",
         "month": "۳۰ روز",
         "quarter": "۹۰ روز",
@@ -1166,13 +1169,15 @@
         "sales": "فروش",
         "renewals": "تمدید",
         "addons": "خدمات اضافی",
-        "deposits": "شارژ"
+        "deposits": "شارژ",
+        "payment": "پرداخت‌ها"
       },
       "summary": {
         "revenue": "درآمد",
         "activeSubs": "اشتراک فعال",
         "activeTrials": "آزمایشی فعال",
         "newTrials": "آزمایشی جدید",
+        "newPaid": "اشتراک‌های پولی جدید",
         "conversion": "تبدیل",
         "renewals": "تمدید",
         "addonRevenue": "درآمد خدمات اضافی",
@@ -1183,13 +1188,13 @@
         "totalRegistrations": "ثبت‌نام‌ها",
         "trialsIssued": "آزمایشی صادرشده",
         "conversion": "نرخ تبدیل",
-        "avgDuration": "میانگین مدت",
         "byProvider": "بر اساس منبع",
         "dailyChart": "ثبت‌نام و آزمایشی روزانه",
         "registrations": "ثبت‌نام"
       },
       "sales": {
         "totalSales": "کل فروش",
+        "totalRevenue": "گردش اشتراک",
         "avgOrder": "میانگین سفارش",
         "topTariff": "تعرفه برتر",
         "byTariff": "بر اساس تعرفه",
@@ -1228,6 +1233,12 @@
         "dailyChart": "شارژ روزانه",
         "dailyByMethod": "شارژ روزانه بر اساس روش پرداخت",
         "revenue": "درآمد"
+      },
+      "payments": {
+        "successRate": "نرخ موفقیت پرداخت",
+        "attempts": "تلاش‌های پرداخت",
+        "failedPurchases": "خریدهای ناموفق",
+        "byGateway": "نرخ موفقیت بر اساس درگاه"
       },
       "loadError": "بارگذاری آمار ناموفق بود"
     },
@@ -3683,6 +3694,12 @@
         "dailyChart": "خرید و درآمد روزانه",
         "tariffChart": "توزیع طرح‌ها",
         "giftBreakdown": "هدایا در مقابل عادی",
+        "funnelTitle": "قیف تبدیل",
+        "giftClaimTitle": "فعال‌سازی هدیه",
+        "giftClaimLabel": "دریافت‌شده / ارسال‌شده",
+        "dailyRevenue": "درآمد روزانه",
+        "byPaymentMethod": "بر اساس روش پرداخت",
+        "bySource": "منابع ترافیک",
         "purchases": "خریدها",
         "revenueLabel": "درآمد",
         "gifts": "هدایا",
@@ -4483,6 +4500,36 @@
     "merging": "در حال ادغام..."
   },
   "landing": {
+    "giftClaim": {
+      "title": "شما یک هدیه دارید!",
+      "error": "فعال‌سازی هدیه ناموفق بود.",
+      "notFoundTitle": "هدیه یافت نشد",
+      "notFoundDesc": "این لینک هدیه نامعتبر یا دیگر در دسترس نیست.",
+      "alreadyTitle": "هدیه قبلاً فعال شده است",
+      "alreadyDesc": "این هدیه قبلاً دریافت شده است.",
+      "successTitle": "هدیه فعال شد!",
+      "connectDesc": "از این لینک برای اتصال استفاده کنید:",
+      "copyLink": "کپی لینک",
+      "pendingTitle": "تقریباً آماده است…",
+      "pendingDesc": "پرداخت در حال تأیید است. این صفحه به‌طور خودکار به‌روزرسانی می‌شود.",
+      "replaceWarning": "شما در حال حاضر اشتراک دارید — فعال‌سازی این هدیه جایگزین آن خواهد شد.",
+      "activateTelegram": "فعال‌سازی در تلگرام",
+      "activateWeb": "فعال‌سازی با ایمیل",
+      "emailLabel": "ایمیل شما",
+      "claimNow": "دریافت هدیه",
+      "failedTitle": "هدیه در دسترس نیست",
+      "failedDesc": "پرداخت این هدیه انجام نشد، بنابراین قابل فعال‌سازی نیست."
+    },
+    "giftLink": {
+      "shareText": "یک هدیه برای شما دارم! اینجا فعال کنید:",
+      "viaTelegram": "تلگرام:",
+      "title": "هدیه آماده است!",
+      "subtitle": "این لینک را برای کسی که می‌خواهید هدیه را دریافت کند بفرستید — خودش آن را فعال می‌کند.",
+      "linkLabel": "لینک هدیه",
+      "telegramLabel": "لینک تلگرام",
+      "alsoSent": "آن را به {{contact}} نیز ایمیل کردیم.",
+      "copyMessage": "کپی پیام"
+    },
     "notFound": "صفحه یافت نشد",
     "forMe": "برای خودم",
     "asGift": "به عنوان هدیه",
@@ -4726,6 +4773,7 @@
   "subscriptions": {
     "buy": "خرید اشتراک",
     "buyAnother": "خرید اشتراک دیگر",
+    "browsePlans": "مشاهده تعرفه‌ها و خرید اشتراک",
     "empty": "هنوز اشتراکی ندارید",
     "emptyDesc": "برای شروع تعرفه‌ای انتخاب کنید",
     "title": "اشتراک‌های من"
