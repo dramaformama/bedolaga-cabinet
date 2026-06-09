@@ -579,7 +579,7 @@
       "buyTraffic": "Buy more traffic",
       "currentTrafficLimit": "Current limit: {{limit}} GB (used {{used}} GB)",
       "buyTrafficTitle": "Buy more traffic",
-      "trafficWarning": "Purchased traffic is added to your current limit and does not carry over to the next period",
+      "trafficWarning": "Purchased traffic is added to your current limit and is valid for 30 days from purchase",
       "trafficUnavailable": "Traffic purchase is not available for your tariff",
       "unlimited": "Unlimited",
       "buyTrafficGb": "Buy {{gb}} GB",
@@ -787,6 +787,13 @@
         "not_yet_valid": "Promo code is not yet active",
         "used": "Promo code has already been used",
         "already_used_by_user": "You have already used this promo code",
+        "active_discount_exists": "You already have an active discount. Deactivate it first.",
+        "no_subscription_for_days": "This promo code requires an active or expired subscription",
+        "subscription_not_found": "Subscription not found",
+        "not_first_purchase": "This promo code is only available for your first purchase",
+        "daily_limit": "Too many promo code activations today",
+        "trial_subscription_exists": "You already have a subscription, so this trial code can't be applied",
+        "trial_provisioning_failed": "Couldn't provision the trial right now, please try again later",
         "user_not_found": "User not found",
         "server_error": "Server error"
       },
@@ -1589,7 +1596,7 @@
       "methodEnabled": "Method enabled",
       "providerNotConfigured": "Provider not configured in env",
       "openUrlDirect": "Open payment page directly",
-      "openUrlDirectHint": "Skip the link panel: the provider opens inside the MiniApp/tab right after the click. After payment the user returns to /balance/top-up/result. Ignored for Stars/CryptoBot and other t.me/ links.",
+      "openUrlDirectHint": "ON — the payment link opens immediately, without the intermediate button panel. OFF — an \"Open payment\" button is shown. Inside Telegram the link opens in the external browser either way (otherwise paying via a bank app/SBP fails); after payment the user returns to the result page. Stars/CryptoBot (t.me/ links) always open natively and ignore this flag.",
       "displayName": "Display name",
       "displayNameHint": "Leave empty for default name",
       "subOptions": "Payment options",
@@ -1756,7 +1763,8 @@
         "dailyLimit": "Daily Spin Limit (0 = unlimited)",
         "minSubDays": "Min subscription days for day payment",
         "promocodes": "Promocodes",
-        "promoPrefix": "Promo code prefix"
+        "promoPrefix": "Promo code prefix",
+        "promoValidityDays": "Promo code validity (days)"
       },
       "starsNotEnabledGlobally": "Star payments are not enabled in Payment Methods. Enable \"Telegram Stars\" in the Payment Methods section.",
       "prizes": {
@@ -1783,7 +1791,9 @@
           "emoji": "Emoji",
           "color": "Color",
           "active": "Active",
-          "worth": "Worth"
+          "worth": "Worth",
+          "probability": "Manual probability (0–1)",
+          "probabilityHint": "Empty = auto by RTP"
         },
         "promo": {
           "title": "Promo Code Settings",
@@ -1801,7 +1811,9 @@
         "times": "times",
         "times_one": "{{count}} time",
         "times_other": "{{count}} times",
-        "topWins": "Top Wins"
+        "topWins": "Top Wins",
+        "loadError": "Failed to load statistics",
+        "empty": "No spins yet"
       }
     },
     "broadcasts": {
@@ -4594,7 +4606,13 @@
         "vk": "VK"
       },
       "backToAccounts": "Back to accounts"
-    }
+    },
+    "emailMergePasswordRequired": "This email already belongs to another account. To merge the accounts, enter that account's password.",
+    "emailMergeCodeSent": "A confirmation code was sent to that email.",
+    "emailMergeCodeDescription": "This email already belongs to another account. We sent a code to it — enter it to confirm ownership and merge the accounts.",
+    "emailMergeCodeLabel": "Code from the email",
+    "emailMergeConfirm": "Confirm and merge",
+    "emailMergeCodeInvalid": "Invalid or expired code"
   },
   "theme": {
     "colors": "Theme Colors",
@@ -4810,6 +4828,14 @@
       "openBot": "Open the bot",
       "retry": "I pressed /start, retry",
       "hint": "After running /start, return here and tap «Retry»."
+    },
+    "serviceUnavailable": {
+      "title": "Service unavailable",
+      "description": "We can't reach the service right now. It may be undergoing maintenance or there's a temporary connection issue.",
+      "retry": "Try again",
+      "checking": "Checking connection...",
+      "hint": "This page will refresh automatically as soon as the service is back.",
+      "close": "Close"
     }
   },
   "merge": {

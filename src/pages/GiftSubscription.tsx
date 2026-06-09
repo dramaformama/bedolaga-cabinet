@@ -22,6 +22,7 @@ import { getApiErrorMessage } from '../utils/api-error';
 import { formatPrice } from '../utils/format';
 import { useCurrency } from '../hooks/useCurrency';
 import { usePlatform, useHaptic } from '@/platform';
+import { openPaymentUrl } from '../utils/openPaymentUrl';
 import {
   SparklesIcon,
   GiftIcon,
@@ -388,7 +389,7 @@ function BuyTabContent({
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { openInvoice, capabilities } = usePlatform();
+  const { openInvoice, capabilities, openLink, platform } = usePlatform();
   const haptic = useHaptic();
 
   // Selection state
@@ -481,7 +482,9 @@ function BuyTabContent({
           }
           return;
         }
-        window.location.href = result.payment_url;
+        // Non-Stars provider (RollyPay/YooKassa/SBP …): open externally inside Telegram so
+        // a bank-app hand-off via custom scheme doesn't dead-end in the WebView (#654272).
+        openPaymentUrl(result.payment_url, platform, openLink);
       } else {
         // Balance purchase: switch to MyGifts tab so the new code is visible
         queryClient.invalidateQueries({ queryKey: ['balance'] });

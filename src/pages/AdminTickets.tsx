@@ -9,7 +9,17 @@ import { adminApi, AdminTicket, AdminTicketDetail } from '../api/admin';
 import { ticketsApi } from '../api/tickets';
 import { copyToClipboard as copyText } from '../utils/clipboard';
 import { usePlatform } from '../platform/hooks/usePlatform';
-import { BackIcon, SettingsIcon, TicketIcon, XIcon } from '@/components/icons';
+import {
+  BackIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  InboxIcon,
+  SettingsIcon,
+  TicketIcon,
+  XCircleIcon,
+  XIcon,
+} from '@/components/icons';
+import { StatCard } from '@/components/stats';
 
 interface MediaAttachment {
   id: string;
@@ -278,25 +288,37 @@ export default function AdminTickets() {
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-          <div className="card text-center">
-            <div className="stat-value">{stats.total}</div>
-            <div className="stat-label">{t('admin.tickets.total')}</div>
-          </div>
-          <div className="card text-center">
-            <div className="stat-value text-accent-400">{stats.open}</div>
-            <div className="stat-label">{t('admin.tickets.statusOpen')}</div>
-          </div>
-          <div className="card text-center">
-            <div className="stat-value text-warning-400">{stats.pending}</div>
-            <div className="stat-label">{t('admin.tickets.statusPending')}</div>
-          </div>
-          <div className="card text-center">
-            <div className="stat-value text-success-400">{stats.answered}</div>
-            <div className="stat-label">{t('admin.tickets.statusAnswered')}</div>
-          </div>
-          <div className="card col-span-2 text-center sm:col-span-1">
-            <div className="stat-value text-dark-400">{stats.closed}</div>
-            <div className="stat-label">{t('admin.tickets.statusClosed')}</div>
+          <StatCard
+            label={t('admin.tickets.total')}
+            value={stats.total}
+            icon={<TicketIcon className="h-5 w-5" />}
+            tone="neutral"
+          />
+          <StatCard
+            label={t('admin.tickets.statusOpen')}
+            value={stats.open}
+            icon={<InboxIcon className="h-5 w-5" />}
+            tone="accent"
+          />
+          <StatCard
+            label={t('admin.tickets.statusPending')}
+            value={stats.pending}
+            icon={<ClockIcon className="h-5 w-5" />}
+            tone="warning"
+          />
+          <StatCard
+            label={t('admin.tickets.statusAnswered')}
+            value={stats.answered}
+            icon={<CheckCircleIcon className="h-5 w-5" />}
+            tone="success"
+          />
+          <div className="col-span-2 sm:col-span-1">
+            <StatCard
+              label={t('admin.tickets.statusClosed')}
+              value={stats.closed}
+              icon={<XCircleIcon className="h-5 w-5" />}
+              tone="neutral"
+            />
           </div>
         </div>
       )}
@@ -443,7 +465,7 @@ export default function AdminTickets() {
                     </span>
                   </div>
                 </div>
-                <div className="mb-4 flex items-center gap-2 text-sm text-dark-500">
+                <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-dark-500">
                   <span>
                     {t('admin.tickets.from')}: {formatUser(selectedTicket)}
                     {selectedTicket.user?.telegram_id && (

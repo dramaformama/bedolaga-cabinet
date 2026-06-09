@@ -429,7 +429,7 @@
       "buyTraffic": "购买更多流量",
       "currentTrafficLimit": "当前限制：{{limit}} GB（已使用 {{used}} GB）",
       "buyTrafficTitle": "购买更多流量",
-      "trafficWarning": "购买的流量将添加到当前限制，不会延续到下一个周期",
+      "trafficWarning": "购买的流量将添加到当前限制，自购买之日起30天内有效",
       "trafficUnavailable": "您的套餐不支持购买流量",
       "unlimited": "无限制",
       "buyTrafficGb": "购买 {{gb}} GB",
@@ -674,6 +674,13 @@
         "not_yet_valid": "优惠码尚未生效",
         "used": "优惠码已被使用",
         "already_used_by_user": "您已使用过此优惠码",
+        "active_discount_exists": "您已有一个生效中的折扣，请先停用它。",
+        "no_subscription_for_days": "此优惠码需要有效或已过期的订阅",
+        "subscription_not_found": "未找到订阅",
+        "not_first_purchase": "此优惠码仅限首次购买使用",
+        "daily_limit": "今日优惠码激活次数过多",
+        "trial_subscription_exists": "您已有订阅，因此无法使用此试用优惠码",
+        "trial_provisioning_failed": "暂时无法开通试用，请稍后再试",
         "user_not_found": "用户不存在",
         "server_error": "服务器错误"
       },
@@ -1404,7 +1411,7 @@
       "methodEnabled": "方法已启用",
       "providerNotConfigured": "提供商未在env中配置",
       "openUrlDirect": "直接打开支付页面",
-      "openUrlDirectHint": "跳过链接面板:点击后提供商在 MiniApp/标签页内直接打开。支付完成后用户返回 /balance/top-up/result。Stars/CryptoBot 和其他 t.me/ 链接忽略此标志。",
+      "openUrlDirectHint": "开启 — 支付链接立即打开,不显示中间的按钮面板。关闭 — 显示「打开支付」按钮。在 Telegram 内两种情况都会在外部浏览器中打开链接(否则通过银行 App/SBP 付款会失败);支付完成后返回结果页。Stars/CryptoBot(t.me/ 链接)始终原生打开,不受此开关影响。",
       "displayName": "显示名称",
       "displayNameHint": "留空以使用默认名称",
       "subOptions": "支付选项",
@@ -1509,7 +1516,8 @@
         "promoPrefix": "优惠码前缀",
         "spinCost": "旋转费用",
         "limitsAndRtp": "限制和RTP",
-        "promocodes": "促销码"
+        "promocodes": "促销码",
+        "promoValidityDays": "促销码有效期（天）"
       },
       "starsNotEnabledGlobally": "星星支付未在支付方式中启用。请在「支付方式」中启用「Telegram Stars」。",
       "prizes": {
@@ -1536,7 +1544,9 @@
           "emoji": "表情",
           "color": "颜色",
           "active": "启用",
-          "worth": "价值"
+          "worth": "价值",
+          "probability": "手动概率 (0–1)",
+          "probabilityHint": "留空 = 按 RTP 自动"
         },
         "promo": {
           "title": "优惠码设置",
@@ -1553,7 +1563,9 @@
         "prizeDistribution": "奖品分布",
         "times": "次",
         "times_other": "{{count}} 次",
-        "topWins": "最高奖品"
+        "topWins": "最高奖品",
+        "loadError": "无法加载统计数据",
+        "empty": "暂无抽奖记录"
       }
     },
     "broadcasts": {
@@ -4138,7 +4150,13 @@
         "vk": "VK"
       },
       "backToAccounts": "返回账户列表"
-    }
+    },
+    "emailMergePasswordRequired": "该邮箱已属于另一个账户。要合并账户，请输入该账户的密码。",
+    "emailMergeCodeSent": "确认码已发送至该邮箱。",
+    "emailMergeCodeDescription": "该邮箱已属于另一个账户。我们已向其发送验证码——请输入以确认所有权并合并账户。",
+    "emailMergeCodeLabel": "邮件中的验证码",
+    "emailMergeConfirm": "确认并合并",
+    "emailMergeCodeInvalid": "验证码无效或已过期"
   },
   "theme": {
     "colors": "主题颜色",
@@ -4351,6 +4369,14 @@
       "openBot": "打开机器人",
       "retry": "我已按 /start，重试",
       "hint": "运行 /start 后，返回此处并点击「重试」。"
+    },
+    "serviceUnavailable": {
+      "title": "服务不可用",
+      "description": "暂时无法连接到服务。可能正在进行维护，或存在临时的网络问题。",
+      "retry": "重试",
+      "checking": "正在检查连接...",
+      "hint": "服务恢复后，本页面将自动刷新。",
+      "close": "关闭"
     }
   },
   "banSystem": {

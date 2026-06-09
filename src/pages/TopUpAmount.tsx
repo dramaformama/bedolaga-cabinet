@@ -14,6 +14,7 @@ import type { PaymentMethod, PaymentMethodOption } from '../types';
 import BentoCard from '../components/ui/BentoCard';
 import { saveTopUpPendingInfo } from '../utils/topUpStorage';
 import { getSafeRedirectPath } from '../utils/safeRedirect';
+import { openPaymentUrl } from '../utils/openPaymentUrl';
 import { copyToClipboard } from '@/utils/clipboard';
 import {
   CardIcon,
@@ -245,7 +246,11 @@ export default function TopUpAmount() {
           lowerUrl.startsWith('http://t.me/') ||
           lowerUrl.startsWith('tg://');
         if (method?.open_url_direct && !isTelegramDeepLink) {
-          window.location.href = redirectUrl;
+          // In the Telegram WebView, same-container navigation to the provider page breaks
+          // when it hands off to a bank app via a custom scheme (SBP) — Android shows
+          // ERR_UNKNOWN_URL_SCHEME, iOS opens nothing (bug #654272). Open externally there;
+          // on web keep same-tab navigation.
+          openPaymentUrl(redirectUrl, platform, openLink);
           return;
         }
 
