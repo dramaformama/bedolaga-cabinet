@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import logger from '../utils/logger';
 import { linkifyText } from '../utils/linkify';
 import { MessageMediaGrid } from '../components/tickets/MessageMediaGrid';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { adminApi, AdminTicket, AdminTicketDetail } from '../api/admin';
@@ -53,10 +53,29 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export default function AdminTickets() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { ticketId } = useParams<{ ticketId: string }>();
   const queryClient = useQueryClient();
   const { capabilities } = usePlatform();
 
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+
+  // Deep-link: /admin/tickets/:ticketId (or a startapp param routed here) opens
+  // the given ticket directly — used by the admin-chat notification buttons.
+  // Both routes render the same component instance (no remount), so we mirror the
+  // URL param into the selection: navigating to the bare /admin/tickets list
+  // clears any deep-linked selection, keeping URL and detail pane in sync. (This
+  // only fires on mount or an actual param change, never on in-list clicks, since
+  // ticketId stays undefined on the bare route.)
+  useEffect(() => {
+    if (!ticketId) {
+      setSelectedTicketId(null);
+      return;
+    }
+    const id = Number(ticketId);
+    if (Number.isInteger(id) && id > 0) {
+      setSelectedTicketId(id);
+    }
+  }, [ticketId]);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [replyText, setReplyText] = useState('');
   const [isReplying, setIsReplying] = useState(false);
@@ -272,9 +291,7 @@ export default function AdminTickets() {
               <BackIcon />
             </button>
           )}
-          <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
-            {t('admin.tickets.title')}
-          </h1>
+          <h1 className="text-xl font-bold text-dark-100">{t('admin.tickets.title')}</h1>
         </div>
         <button
           onClick={() => navigate('/admin/tickets/settings')}

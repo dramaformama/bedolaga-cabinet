@@ -184,7 +184,7 @@ export default function AdminPayments() {
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.payments.title')}</h1>
+            <h1 className="text-xl font-bold text-dark-100">{t('admin.payments.title')}</h1>
             <p className="text-sm text-dark-400">{t('admin.payments.description')}</p>
           </div>
         </div>
@@ -239,7 +239,7 @@ export default function AdminPayments() {
               onClick={() => setStatusFilter(option.value)}
               className={`rounded-lg px-3 py-1.5 text-sm transition-all ${
                 statusFilter === option.value
-                  ? 'bg-accent-500 text-white'
+                  ? 'bg-accent-500 text-on-accent'
                   : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
               }`}
             >
@@ -256,7 +256,7 @@ export default function AdminPayments() {
               onClick={() => handlePeriodChange(option.value)}
               className={`rounded-lg px-3 py-1.5 text-sm transition-all ${
                 periodFilter === option.value
-                  ? 'bg-accent-500 text-white'
+                  ? 'bg-accent-500 text-on-accent'
                   : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
               }`}
             >
@@ -267,7 +267,7 @@ export default function AdminPayments() {
             onClick={() => handlePeriodChange('custom')}
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all ${
               periodFilter === 'custom'
-                ? 'bg-accent-500 text-white'
+                ? 'bg-accent-500 text-on-accent'
                 : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
             }`}
           >

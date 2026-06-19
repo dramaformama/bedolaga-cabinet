@@ -231,7 +231,7 @@ function PeriodCard({
           <span
             className={cn(
               'rounded-md px-2 py-0.5 text-xs font-bold',
-              isSelected ? 'bg-white/20 text-white' : 'bg-accent-500/20 text-accent-400',
+              isSelected ? 'bg-white/20 text-on-accent' : 'bg-accent-500/20 text-accent-400',
             )}
           >
             -{period.discount_percent}%
@@ -366,7 +366,7 @@ function PaymentMethodCard({
                 className={cn(
                   'rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200',
                   selectedSubOption === opt.id
-                    ? 'bg-accent-500 text-white shadow-sm shadow-accent-500/25'
+                    ? 'bg-accent-500 text-on-accent shadow-sm shadow-accent-500/25'
                     : 'bg-dark-800/50 text-dark-300 hover:bg-dark-700/50',
                 )}
               >
@@ -716,7 +716,7 @@ function BuyTabContent({
         className={cn(
           'flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold transition-all duration-200',
           canSubmit && !purchaseMutation.isPending
-            ? 'bg-accent-500 text-white shadow-lg shadow-accent-500/25 hover:bg-accent-400 hover:shadow-accent-500/40 active:scale-[0.98]'
+            ? 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 hover:bg-accent-400 hover:shadow-accent-500/40 active:scale-[0.98]'
             : 'cursor-not-allowed bg-dark-800 text-dark-500',
         )}
       >
@@ -833,7 +833,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
         className={cn(
           'w-full max-w-sm rounded-2xl px-6 py-4 text-base font-semibold transition-all duration-200',
           code.trim() && !activateMutation.isPending
-            ? 'bg-accent-500 text-white shadow-lg shadow-accent-500/25 hover:bg-accent-400 active:scale-[0.98]'
+            ? 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 hover:bg-accent-400 active:scale-[0.98]'
             : 'cursor-not-allowed bg-dark-800 text-dark-500',
         )}
       >
@@ -962,7 +962,7 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
           <button
             type="button"
             onClick={handleShare}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-accent-400 active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold uppercase tracking-wider text-on-accent transition-colors hover:bg-accent-400 active:scale-[0.98]"
           >
             <ExportIcon className="h-4 w-4" />
             {t('gift.shareGift')}
@@ -1243,7 +1243,7 @@ export default function GiftSubscription() {
                 className={cn(
                   'flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
                   activeTab === tab.id
-                    ? 'bg-accent-500 text-white shadow-sm'
+                    ? 'bg-accent-500 text-on-accent shadow-sm'
                     : 'text-dark-400 hover:text-dark-200',
                 )}
               >

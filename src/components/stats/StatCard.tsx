@@ -52,7 +52,7 @@ export function StatCard({
   return (
     <div className="h-full rounded-xl bg-dark-800/30 p-3 transition-colors hover:bg-dark-800/50">
       <div className="flex items-center justify-between gap-2">
-        <span className="truncate text-xs text-dark-500 sm:text-sm">{label}</span>
+        <span className="line-clamp-2 text-xs leading-tight text-dark-500 sm:text-sm">{label}</span>
         {trailing}
       </div>
       {/* Chip is centred against the value line only (delta sits below the whole

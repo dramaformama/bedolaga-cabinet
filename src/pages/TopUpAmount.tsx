@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
 import { balanceApi } from '../api/balance';
@@ -77,7 +77,6 @@ export default function TopUpAmount() {
   const navigate = useNavigate();
   const { methodId } = useParams<{ methodId: string }>();
   const [searchParams] = useSearchParams();
-  const queryClient = useQueryClient();
   const { formatAmount, currencySymbol, convertAmount, convertToRub, targetCurrency } =
     useCurrency();
   const { openInvoice, openTelegramLink, openLink, platform } = usePlatform();
@@ -89,9 +88,15 @@ export default function TopUpAmount() {
     ? parseFloat(searchParams.get('amount')!)
     : undefined;
 
-  // Get method from cached payment-methods query
-  const cachedMethods = queryClient.getQueryData<PaymentMethod[]>(['payment-methods']);
-  const method = cachedMethods?.find((m) => m.id === methodId);
+  // Fetch payment methods with a real query (dedupes with the method-selection page and
+  // Balance via the shared ['payment-methods'] key). A non-reactive getQueryData read used
+  // to dead-end on an infinite spinner whenever the cache was cold — reload, browser-back
+  // from the provider page, or a deep link straight to this route.
+  const { data: methods, isLoading: isMethodsLoading } = useQuery({
+    queryKey: ['payment-methods'],
+    queryFn: balanceApi.getPaymentMethods,
+  });
+  const method = methods?.find((m) => m.id === methodId);
 
   const handleNavigateBack = useCallback(() => {
     navigate(-1);
@@ -138,10 +143,15 @@ export default function TopUpAmount() {
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  // Canonical RUB amount when the user picked a quick-amount chip. The input shows a
+  // rounded display-currency value; validating/charging the canonical RUB avoids the FX
+  // round-trip that could push a min-amount chip just below the allowed minimum. Cleared
+  // as soon as the user edits the field by hand.
+  const [quickRub, setQuickRub] = useState<number | null>(null);
 
-  // If method not found in cache, redirect to method selection
+  // Once methods have loaded, redirect to method selection if this method id is unknown.
   useEffect(() => {
-    if (cachedMethods && !method) {
+    if (methods && !method) {
       const params = new URLSearchParams();
       const amount = searchParams.get('amount');
       const rt = searchParams.get('returnTo');
@@ -150,7 +160,7 @@ export default function TopUpAmount() {
       const qs = params.toString();
       navigate(`/balance/top-up${qs ? `?${qs}` : ''}`, { replace: true });
     }
-  }, [cachedMethods, method, navigate, searchParams]);
+  }, [methods, method, navigate, searchParams]);
 
   useEffect(() => {
     if (!method?.options || method.options.length === 0) {
@@ -277,7 +287,13 @@ export default function TopUpAmount() {
     return () => clearTimeout(timer);
   }, [platform]);
 
+  // Spinner only while methods are actually loading. Once the query has resolved without
+  // this method, the redirect effect above navigates away (so we render nothing here rather
+  // than spinning forever on a cold cache).
   if (!method) {
+    if (!isMethodsLoading) {
+      return null;
+    }
     return (
       <div className="flex items-center justify-center py-12">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
@@ -315,27 +331,43 @@ export default function TopUpAmount() {
       return;
     }
     const amountRubles = convertToRub(amountCurrency);
-    if (amountRubles < minRubles || amountRubles > maxRubles) {
+
+    // Resolve the canonical RUB amount. Prefer an exact source — an unedited prefill or a
+    // quick-amount chip — over the display value, whose FX round-trip rounding (e.g. 150₽ at
+    // rate 90.66 → "1.65" USD → back to 149.59₽) could push a min selection just below the
+    // allowed minimum and block the top-up. quickRub is cleared on any manual edit, so a
+    // non-null value means the field still holds that chip's exact amount.
+    const userEditedAmount = amount.trim() !== initialDisplayAmount.trim();
+    const usingPrefill = !userEditedAmount && !!initialAmountRubles && initialAmountRubles > 0;
+    const usingQuick = quickRub !== null;
+
+    let canonicalRubles = amountRubles;
+    if (usingPrefill) {
+      canonicalRubles = initialAmountRubles as number;
+    } else if (usingQuick && quickRub !== null) {
+      canonicalRubles = quickRub;
+    } else if (targetCurrency !== 'RUB') {
+      // Hand-typed non-RUB amount: snap up to the minimum when it lands within one
+      // display-currency rounding step below it, so typing the advertised (rounded)
+      // minimum isn't rejected by FX rounding.
+      const decimals = targetCurrency === 'IRR' ? 0 : 2;
+      const roundingStep = convertToRub(Math.pow(10, -decimals));
+      if (canonicalRubles < minRubles && canonicalRubles >= minRubles - roundingStep) {
+        canonicalRubles = minRubles;
+      }
+    }
+
+    if (canonicalRubles < minRubles || canonicalRubles > maxRubles) {
       setError(t('balance.errors.amountRange', { min: minRubles, max: maxRubles }));
       return;
     }
 
-    // Сохраняем canonical RUB amount если юзер НЕ редактировал префилл.
-    // Display-rounding в `.toFixed(2)` теряет точность: 150₽ при rate=90.66 → "1.65" USD
-    // (округление вниз с 1.6545), back-конвертация даёт 1.65 × 90.66 = 149.589₽ < 150₽
-    // → юзер не может купить подписку 150₽. С canonical RUB обходим FX round-trip.
-    //
-    // Math.ceil для не-RUB локалей покрывает остаточные sub-копеечные ошибки
-    // floating-point, когда юзер реально вводит свой amount.
-    const userEditedAmount = amount.trim() !== initialDisplayAmount.trim();
-    let amountKopeks: number;
-    if (!userEditedAmount && initialAmountRubles && initialAmountRubles > 0) {
-      amountKopeks = Math.round(initialAmountRubles * 100);
-    } else if (targetCurrency === 'RUB') {
-      amountKopeks = Math.round(amountRubles * 100);
-    } else {
-      amountKopeks = Math.ceil(amountRubles * 100);
-    }
+    // Round for exact sources; ceil a hand-typed amount so float noise never lands sub-kopeck
+    // under the chosen value.
+    const amountKopeks =
+      targetCurrency === 'RUB' || usingPrefill || usingQuick
+        ? Math.round(canonicalRubles * 100)
+        : Math.ceil(canonicalRubles * 100);
     if (isStarsMethod) {
       starsPaymentMutation.mutate(amountKopeks);
     } else {
@@ -343,7 +375,11 @@ export default function TopUpAmount() {
     }
   };
 
-  const quickAmounts = [100, 300, 500, 1000].filter((a) => a >= minRubles && a <= maxRubles);
+  const quickAmounts = (
+    method.quick_amounts != null
+      ? method.quick_amounts.map((kopeks) => kopeks / 100)
+      : [100, 300, 500, 1000]
+  ).filter((a) => a >= minRubles && a <= maxRubles);
   const currencyDecimals = targetCurrency === 'IRR' || targetCurrency === 'RUB' ? 0 : 2;
   const getQuickValue = (rub: number) =>
     targetCurrency === 'IRR'
@@ -442,7 +478,10 @@ export default function TopUpAmount() {
               inputMode="decimal"
               enterKeyHint="done"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                setQuickRub(null);
+              }}
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
               onKeyDown={(e) => {
@@ -468,7 +507,7 @@ export default function TopUpAmount() {
                 ? 'cursor-not-allowed bg-dark-700 text-dark-500'
                 : isStarsMethod
                   ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg shadow-yellow-500/25 hover:from-yellow-400 hover:to-orange-400 active:from-yellow-600 active:to-orange-600'
-                  : 'bg-accent-500 text-white shadow-lg shadow-accent-500/25 transition-colors hover:bg-accent-400 active:bg-accent-600'
+                  : 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 transition-colors hover:bg-accent-400 active:bg-accent-600'
             }`}
           >
             {isPending ? (
@@ -496,6 +535,7 @@ export default function TopUpAmount() {
                 type="button"
                 onClick={() => {
                   setAmount(val);
+                  setQuickRub(a);
                   inputRef.current?.blur();
                 }}
                 hover
