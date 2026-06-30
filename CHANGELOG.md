@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.59.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.58.0...v1.59.0) (2026-06-30)
+
+
+### Features
+
+* **cabinet:** legal footer on login + admin toggle ([984d1b0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/984d1b077616a352eb972daa02a9030545afc55e))
+
+
+### Bug Fixes
+
+* align SubscriptionRequestRecord type with Remnawave 2.8.0 ([fd5500c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/fd5500c85badb95fce620267dff4574b7290258a))
+
 ## [1.58.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.57.0...v1.58.0) (2026-06-19)
 
 
