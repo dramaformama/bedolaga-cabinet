@@ -24,11 +24,14 @@ import { GiftsTab } from '../components/admin/userDetail/GiftsTab';
 import { SyncTab } from '../components/admin/userDetail/SyncTab';
 import { ReferralsTab } from '../components/admin/userDetail/ReferralsTab';
 import { BalanceTab } from '../components/admin/userDetail/BalanceTab';
+import { ActivityTab } from '../components/admin/userDetail/ActivityTab';
 import { TicketsTab } from '../components/admin/userDetail/TicketsTab';
 import { InfoTab } from '../components/admin/userDetail/InfoTab';
 import { SubscriptionTab } from '../components/admin/userDetail/SubscriptionTab';
+import { getApiErrorMessage } from '../utils/api-error';
 import { toNumber } from '../utils/inputHelpers';
 import { usePermissionStore } from '../store/permissions';
+import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 
 // (Subscription-tab helpers: getCountryFlag / PlusIcon / MinusIcon /
 // StatusBadge / GiftStatusBadge / GiftCard moved to
@@ -49,7 +52,7 @@ export default function AdminUserDetail() {
   const [user, setUser] = useState<UserDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    'info' | 'subscription' | 'balance' | 'sync' | 'tickets' | 'gifts' | 'referrals'
+    'info' | 'subscription' | 'balance' | 'sync' | 'tickets' | 'gifts' | 'referrals' | 'activity'
   >('info');
   const [syncStatus, setSyncStatus] = useState<PanelSyncStatusResponse | null>(null);
   const [tariffs, setTariffs] = useState<UserAvailableTariff[]>([]);
@@ -647,6 +650,42 @@ export default function AdminUserDetail() {
     }
   };
 
+  const handleCancelSbpRecurring = async () => {
+    if (!userId || !selectedSub?.sbp_recurring_id) return;
+    setActionLoading(true);
+    try {
+      await adminUsersApi.cancelSbpRecurring(userId, selectedSub.id);
+      notify.success(t('admin.users.detail.subscription.sbpCancelled'), t('common.success'));
+      await loadUser();
+    } catch {
+      notify.error(t('admin.users.userActions.error'), t('common.error'));
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeleteSubscription = async () => {
+    if (!userId || !selectedSub) return;
+    setActionLoading(true);
+    try {
+      // Активную платную подписку сервер по умолчанию бережёт — админ уже
+      // подтвердил намерение кнопкой, поэтому просим удалить именно её.
+      const force = Boolean(selectedSub.is_active) && !selectedSub.is_trial;
+      await adminUsersApi.deleteSubscription(userId, selectedSub.id, force);
+      notify.success(t('admin.users.detail.subscription.deleted'), t('common.success'));
+      setSubscriptionDetailView(false);
+      await loadUser();
+    } catch (err) {
+      // Отказы тут осмысленные и действенные: открытый временный доступ
+      // (409, «сначала заверши или восстанови grace»), активная платная без
+      // force (409), подписки нет (404). Общее «Ошибка» оставило бы админа
+      // гадать, почему кнопка не сработала, — показываем текст сервера.
+      notify.error(getApiErrorMessage(err, t('admin.users.userActions.error')), t('common.error'));
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const handleDisableUser = async () => {
     if (!userId) return;
     setActionLoading(true);
@@ -712,7 +751,7 @@ export default function AdminUserDetail() {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
     const i = Math.min(Math.floor(Math.log(bytes) / Math.log(k)), sizes.length - 1);
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+    return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
   };
 
   const copyToClipboard = async (text: string) => {
@@ -728,9 +767,14 @@ export default function AdminUserDetail() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-      </div>
+      <PageSkeleton
+        variant="admin"
+        leading={['h-10 w-10 rounded-xl', 'h-12 w-12 rounded-full']}
+        titleWidth="w-56"
+        className="space-y-6"
+      >
+        <Skeleton variant="card" count={2} className="h-40" />
+      </PageSkeleton>
     );
   }
 
@@ -776,7 +820,18 @@ export default function AdminUserDetail() {
         className="scrollbar-hide -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 py-1"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        {(['info', 'subscription', 'balance', 'sync', 'tickets', 'gifts', 'referrals'] as const)
+        {(
+          [
+            'info',
+            'subscription',
+            'balance',
+            'sync',
+            'tickets',
+            'gifts',
+            'referrals',
+            'activity',
+          ] as const
+        )
           .filter((tab) => tab !== 'sync' || hasPermission('users:sync'))
           .map((tab) => (
             <button
@@ -795,6 +850,7 @@ export default function AdminUserDetail() {
               {tab === 'tickets' && t('admin.users.detail.tabs.tickets')}
               {tab === 'gifts' && t('admin.users.detail.tabs.gifts')}
               {tab === 'referrals' && t('admin.users.detail.tabs.referrals')}
+              {tab === 'activity' && t('admin.users.detail.tabs.activity')}
             </button>
           ))}
       </div>
@@ -846,6 +902,8 @@ export default function AdminUserDetail() {
           <SubscriptionTab
             userSubscriptions={userSubscriptions}
             selectedSub={selectedSub}
+            onCancelSbpRecurring={handleCancelSbpRecurring}
+            onDeleteSubscription={handleDeleteSubscription}
             activeSubscriptionId={activeSubscriptionId}
             onActiveSubscriptionChange={setActiveSubscriptionId}
             subscriptionDetailView={subscriptionDetailView}
@@ -947,6 +1005,11 @@ export default function AdminUserDetail() {
         {/* Referrals Tab */}
         {activeTab === 'referrals' && user && userId && (
           <ReferralsTab user={user} userId={userId} onUserRefresh={loadUser} />
+        )}
+
+        {/* Activity Tab */}
+        {activeTab === 'activity' && userId && (
+          <ActivityTab userId={userId} formatDate={formatDate} />
         )}
       </div>
     </div>

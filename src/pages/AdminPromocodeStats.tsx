@@ -2,9 +2,10 @@ import { useParams, useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
-import { promocodesApi, PromoCodeType } from '../api/promocodes';
+import { promocodesApi, type PromoCodeType } from '../api/promocodes';
 import { AdminBackButton } from '../components/admin';
 import { StatCard } from '../components/stats';
+import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 import {
   EditIcon,
   ClockIcon,
@@ -22,6 +23,7 @@ const getTypeLabel = (type: PromoCodeType): string => {
     trial_subscription: i18n.t('admin.promocodes.type.trialSubscription'),
     promo_group: i18n.t('admin.promocodes.type.promoGroup'),
     discount: i18n.t('admin.promocodes.type.discount'),
+    balance_and_days: i18n.t('admin.promocodes.type.balanceAndDays'),
   };
   return labels[type] || type;
 };
@@ -33,6 +35,7 @@ const getTypeColor = (type: PromoCodeType): string => {
     trial_subscription: 'bg-accent-500/20 text-accent-400',
     promo_group: 'bg-warning-500/20 text-warning-400',
     discount: 'bg-pink-500/20 text-pink-400',
+    balance_and_days: 'bg-success-500/20 text-success-400',
   };
   return colors[type] || 'bg-dark-600 text-dark-300';
 };
@@ -78,9 +81,14 @@ export default function AdminPromocodeStats() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-      </div>
+      <PageSkeleton variant="admin" leading={1} titleWidth="w-56" className="space-y-6">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <StatCard loading />
+          <StatCard loading />
+          <StatCard loading />
+        </div>
+        <Skeleton variant="card" className="h-64" />
+      </PageSkeleton>
     );
   }
 

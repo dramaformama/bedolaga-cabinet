@@ -1,5 +1,277 @@
 # Changelog
 
+## [1.69.1](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.69.0...v1.69.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* **auth:** экран согласия на всех Telegram-входах вместо падения «Something went wrong» ([a24058c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a24058c9855199e725b8f0316041b2036ee97d77))
+* **brand:** Safari снова видит логотип во вкладке — подсказка первого кадра только PNG ([fccc16b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/fccc16b7d9436203b57a862285b84536d4f4f9c7))
+* **brand:** вкладка и ярлыки берут бренд с API ещё до загрузки приложения ([7efd51f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7efd51f6d4f4508fbc68509ff62588d886cd301b))
+* **brand:** загрузка логотипа лечит отравленный кеш браузера ([06b331f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/06b331fceb85da28563a3f5024cc46a5bdc231ca))
+* **brand:** подсказка первого кадра для Safari — плитка с меньшим скруглением ([5869af4](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/5869af43387a56f63fa2cf3a89dbb9b210c02e3c))
+* **brand:** фавикон ведёт на эндпоинт бота — Safari его видит, CORS логотипа цел ([fb4ea70](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/fb4ea701a5c582107b7bade1139c209ca3d62147))
+* **errors:** структурный detail с бэка больше нигде не попадает в текст ошибки ([1a9c922](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/1a9c922852d90f227dee35150ae471cbe3d256f5))
+* **header:** аватар берётся и у бота, а не только из initData ([1137b70](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/1137b70ee2c1cb729a4760e2cd250f2099ce62b3))
+
+## [1.69.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.68.2...v1.69.0) (2026-09-04)
+
+
+### Features
+
+* **admin:** переключатель «отправлять это письмо» в редакторе email-шаблонов ([745e839](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/745e8397916754a9fb6d654e08f60afd15e9d14e))
+* **admin:** превью письма рассылки рендерит бот — в общей обёртке ([f18d64c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f18d64c3dd1d5ebab64d0c976cd0940e860b9269))
+* **admin:** редактор email-шаблонов понимает общую обёртку писем ([3f07301](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/3f0730191d0d0ff04fd7353d848c4fc8eb760142))
+
+## [1.68.2](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.68.1...v1.68.2) (2026-09-04)
+
+
+### Bug Fixes
+
+* **branding:** бренд инсталляции во вкладке, фавиконе и ярлыках вместо «VPN»/«V» ([1ca7e48](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/1ca7e489af577dda7c58302ecba161a3403f056d))
+* **branding:** иконки ярлыков без прозрачных углов — iOS и Android заливали их белым ([38a6738](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/38a6738c4ae98f9ebc61a068aa60fca99e4c47e3))
+* **theme:** палитра оператора применяется до первой отрисовки ([d62c8d3](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d62c8d39e6e99c91f567a1a4ac13e099ef630cff))
+* **ui:** боковые вырезы в альбомной ориентации iPhone ([2d71d63](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2d71d63b68370b9cb3c679a52410eaa80edd7078))
+* **ui:** мобильная шапка не срезается статус-баром в standalone-режиме iOS ([59c42b1](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/59c42b197c9003d570c976811609b42cec44d791))
+* **ui:** полоса под статус-баром iOS вместо растянутого стекла шапки ([28fd968](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/28fd9680f1a2b45068b612e44c6f5ce049e66f2e))
+* **ui:** прижатые к низу элементы не прячутся за мобильной панелью ([b7d1391](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b7d1391518819689d807d4b5589e9d96aa551e51))
+* **ui:** ярлык iOS — шапка сливается со статус-баром, панель ближе к краю ([accd1e9](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/accd1e99c2866ddc5ede338e7434980394596d74))
+
+## [1.68.1](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.68.0...v1.68.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **admin:** кастомные цвета темы не сохранялись при дефолтной палитре ([b0570ee](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b0570ee0aa596a8ea96d0d8ec94542c68c8722d4))
+* **theme:** операторский фон светлой темы перекрывался заглушкой index.html ([2f4f52a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2f4f52a9a302264b67160d0990ac57081236d1ac))
+* **theme:** палитра статусных цветов теперь строится от выбранного цвета ([414802b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/414802bcff8e1712bf0b718b604a057870d12b58))
+* **theme:** стеклянные карточки берут цвет текста из палитры оператора ([fcef18a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/fcef18a11e95004c8ae98956d41d41f72bd4713b))
+
+## [1.68.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.67.0...v1.68.0) (2026-09-04)
+
+
+### Features
+
+* **admin:** кнопка повторной доставки ошибки ([7c63bcd](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7c63bcd474dbbe95a8455c839dac418435f2a615))
+* **admin:** страница системных ошибок ([a337b96](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a337b96f9b76d2350c21e280fbd33548d5fec5c1))
+* **admin:** страница системных ошибок ([d2e25ab](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d2e25abe94f72a0a76ce413c5c7db0b4959dcef6))
+* **payments:** ParityPay в кабинете ([04dd888](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/04dd8882ed0a971e3c68d7262e409cbb3ef3f5b9))
+* **payments:** TabPay в кабинете ([47f8760](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/47f8760d8816eafa6b58b13290e313ae4eb73fb3))
+
+
+### Bug Fixes
+
+* **admin:** гейт кнопки повтора, видимый исход доставки и дебаунс поиска ([c39107d](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c39107def07f427c52b0acb2b9480223c9764c55))
+* **admin:** неверный путь API у страницы системных ошибок ([6b08bee](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/6b08bee8397292beea0fbadd44a82be4faa6118e))
+* **build:** вернуть тело полифила Object.hasOwn ([f23b3c0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f23b3c0b3454470741745a066bd158879b44209b))
+* **i18n:** не рисовать интерфейс раньше словарей и темы ([881122f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/881122f730f22f1d265e4120e51e52159778406c))
+* **i18n:** не рисовать интерфейс раньше словарей и темы ([379ab0e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/379ab0e9e61f00ea3dfdf44f99bc3f9b3b813d71))
+* **repo:** убрать закоммиченный симлинк node_modules ([906e6bd](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/906e6bdfdda519d559c633ff893eef2036769561))
+
+## [1.67.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.66.0...v1.67.0) (2026-08-27)
+
+
+### Features
+
+* **admin:** explain where day rewards land when no tariff is set ([d5e3b02](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d5e3b022f04ec87edb2ae839f5b4a30cc03c7403))
+* **admin:** import legacy referral settings from the cabinet ([c3c7994](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c3c799449a09469a500a7d456a0675f2e0f46009))
+* **admin:** reward level editor in the cabinet ([99eacfa](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/99eacfa1602d340476967a2942d1026a68c32acd))
+* **admin:** set how many referrals unlock a reward level ([8f6181f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/8f6181f5dcd74976b60584fb0684ed533e05a87d))
+* **admin:** set the referral chain depth from the level editor ([caf21ec](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/caf21ec313abb9e84a6d26dd560cd33399b98c3e))
+* **admin:** surface what the legacy import could not carry over ([b65137e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b65137ee086ffcd3347a54066ffaeaff9991fb18))
+* **admin:** предупреждать, когда весь раздел закреплён в .env ([2f95c6a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2f95c6a6742f6293bdec9e74eb22fb8f0fabdee3))
+* **admin:** раздел grace-доступа в админменю ([bd86d3d](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/bd86d3d27ca8bf9d71912a9a1d4392439704c208))
+* **admin:** скелетоны вместо спиннеров в админке ([a330036](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a330036ebe7fa06d96ea7b99441f8054fa2793ee))
+* **referral:** render day rewards and chain levels ([1003bfc](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/1003bfc53903fc6337156c2aedd703d93a1f7461))
+* **referral:** блокировать поле глубины, закреплённое в .env ([b35b19b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b35b19bc587575134c7fee39fb2b62f128ef1efb))
+* **referral:** выбор награды карточками с иконками, деньги или дни ([4db4fd1](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/4db4fd1f2b072e2e86c18bcf21abe4473ca71bb0))
+* **referral:** карточка настроек наград на экране партнёра ([7d51713](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7d51713cb8470f561e85abf8f4b07d701547956d))
+* **referral:** понятная карточка условий и «Ваш уровень» вместо глубины сети ([20ad959](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/20ad9598a0d30ca8881ea524b2db586393246b1d))
+* **referral:** предупреждать о выключенном мультитарифе в редакторе уровней ([097cd1e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/097cd1e52735d82aafd82cf11be9008acacf4db7))
+* **referral:** режим рангов в редакторе уровней и на экране партнёра ([28cb8dc](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/28cb8dc4a35555d4622bb3337e58bc79b9b52101))
+* **referral:** суммы на карточках выбора и подписка только под дни ([e31c76c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/e31c76c6d71c67799bb15d704bb268fca717382b))
+* **ui:** доперевести пользовательские экраны со спиннеров на скелетоны ([7b9c78c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7b9c78c14ea4ca318be35eba3983e49d3bc9cd83))
+* **ui:** единый источник правды по стилям скелетонов ([f1ce830](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f1ce830266ae6ae551edfee19d17df7c3bc87bc5))
+* **ui:** примитив Skeleton и SkeletonGroup вместо двух мёртвых компонентов ([b6b608e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b6b608eda6065defa00b79d59b9940e7dc49b4b1))
+* **ui:** скелетоны вместо спиннеров на пользовательских страницах ([1fc5e72](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/1fc5e72c3446471a9d34252479dae87e260b1263))
+
+
+### Bug Fixes
+
+* **admin:** «оставить как есть» распознавать без учёта регистра ([4d99cfc](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/4d99cfca33c362b253e53618c50baf82f01dc128))
+* **admin:** close three traps in the cabinet level editor ([7c67969](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7c6796917733490d621b5b00ecbc793724a2876c))
+* **admin:** put the reward-level editor in the admin main menu ([c3eb6c5](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c3eb6c5831646cef9aff49b59fc5706b30c7542f))
+* **admin:** выбор аварийного сквада и очистка числовых полей ([73c5715](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/73c57153925ef864b0dfe5d659c98078923ff08a))
+* **admin:** закрыть находки ревью раздела grace-доступа ([9793e8b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/9793e8bbe6e01f4504bbe034c18fa07c3d11a05a))
+* **admin:** разбирать 422 от бэкенда и сторожить переводы раздела ([f466b78](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f466b78e38e6c7efff4ddb0bfdfec58f9aaedc7f))
+* **admin:** сделать имя пользователя в тикете ссылкой на его профиль ([48ef463](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/48ef4639b21f8221dd7bfc02ac6bff9a65ddb79b))
+* **admin:** сделать имя пользователя в тикете ссылкой на его профиль ([5489db6](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/5489db6b36e7a75fc95475dd408ee56f61011206))
+* **gift:** ссылка на подарок из кабинета не открывалась в боте ([12b310b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/12b310b2999f371ea47b96dc6c3cc02415e10929))
+* **referral:** close what the UX review found in the cabinet ([8fdf978](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/8fdf978b8ad8282f108c67113d58ea45feecea4e))
+* **referral:** make the level editor's numeric fields honest ([3a5fc7a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/3a5fc7ad465374005fe539ab970d8a8a9538166d))
+* **storage:** не принимать запись в память за сохранность там, где нужен reload ([803cb2e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/803cb2e367cfaa8d1b5aa1d625ba4cc6b33f2ae9))
+* **storage:** не ронять приложение, когда браузер запретил хранилище ([673a772](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/673a772c5b4b0855d9ec176a16e78b4019c202f1))
+* **storage:** не считать хранилище мёртвым из-за одного отказа записи ([58e1288](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/58e12880beb83fce0d89ea46749f8e963b844938))
+* **storage:** перевести оставшиеся незащищённые обращения и поставить храповик ([31a3a3e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/31a3a3e07c48b277ef8bed6fb0685132ba512cc3))
+* **ui:** закрыть хвосты консолидации скелетонов ([56a5b25](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/56a5b25d611fd604a34d3c73415a08545363274b))
+
+## [1.66.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.65.0...v1.66.0) (2026-08-20)
+
+
+### Features
+
+* **auth:** allow manual opt-in for deep-link Telegram login ([d03b9bd](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d03b9bdad785ac7710f30527f230eeb793e1089b))
+* **dashboard:** плитка «Подключить устройство» на главной ([06c7d13](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/06c7d1388308de5fc1adad0cd2697d3c03c41c49))
+* **dashboard:** подключение устройства прикреплено к карточке подписки ([28e25a9](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/28e25a92922501ed609623776e987fcd96f71032))
+* **landing:** автозаполнение поля контакта из параметра URL (?contact=...) ([8d0c33b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/8d0c33bb08b8f28b19367d1ea612a8455fba0ff1))
+* **landing:** отправлять слаг рекламной кампании при гостевой покупке ([cfc2ab2](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/cfc2ab2f7fe641570a818d0ca75c9cd9dddbf2b7))
+* **landing:** отправлять слаг рекламной кампании при гостевой покупке ([d4379fc](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d4379fce25af69e866e9232a3cd036652e7eae17))
+* **promocodes:** трафик в наборе бонусов промокода ([f6a64bf](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f6a64bfc1eb885cde31bcbab1f1474b1d693e718))
+* **remnawave:** GeoCheck ноды в админке — запуск проверки и просмотр отчёта ([b4e1de6](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b4e1de6152cfc85418c62e4f840180411989a2a7))
+* **users:** кнопка удаления подписки в карточке пользователя ([eafc563](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/eafc563128b68f49f0a1f03a30c899b527ce4734))
+
+
+### Bug Fixes
+
+* **admin:** дополнить тип sort_by и китайскую строку сортировки ([2d6f8d9](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2d6f8d97546f7ca69540924aa0637f720500bef3))
+* **auth:** вернуть виджет после «Назад» и добить локали до четырёх ([c108832](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c1088325aabaf43de6f60653ff650c3cfb1beb2f))
+* **auth:** читать initData из моста Telegram, а не только из кэша SDK ([f81af40](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f81af401f7f6ca1a28806cbf237a33da7449d893))
+* **dashboard:** счётчик устройств в плитке на главной ([39b9b8e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/39b9b8e1d2690c894ce08b0ce16d4780ecffee09))
+* **geocheck:** сквозные клики через портал и safe-зоны в полноэкранном режиме ([debe26a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/debe26ae359545fead38bf087b069e9defecec26))
+* **geocheck:** скелетон до отрисовки отчёта и сброс зума на новом отчёте ([5c3031f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/5c3031f5f52e4a7bbe101441a97f5e47dd1eff3f))
+* **geocheck:** убрать полноэкранный режим в Telegram Mini App ([5db1ffc](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/5db1ffccf6a6659c06a1fbe5b2b703abd0c609bd))
+* **geocheck:** убрать скачивание отчёта в Telegram Mini App ([a451a12](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a451a129fe0b211369f336f09f8c8e1abd105173))
+* **landing:** не оставлять контакт из ссылки в адресной строке ([acbffa4](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/acbffa4e17e4549a1068f286e3009b38d30ae6be))
+* **promocodes:** чекбоксы набора по значениям, трафик в списке ([29c9ed1](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/29c9ed1a40bad95b187fabd81098a795d4c096da))
+* **support:** показывать пользователю отказ бэка при создании тикета ([d889289](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d88928912acaaf9eeee52235ee4e2aace5e245e7))
+* **tickets:** длинный текст в сообщении уезжал за пределы карточки ([eede5ff](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/eede5ffdfdde9ece9956817c646ade36a9b2ccf6))
+* **tickets:** длинный текст в сообщении уезжал за пределы карточки ([2ba6fc0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2ba6fc0f6f743b8648c0d1e708cd123a465ee77f))
+* **users:** показывать причину отказа при удалении подписки ([415a76f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/415a76f7cff4e0e06edb15b91a24467f0465e2e9))
+
+## [1.65.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.64.0...v1.65.0) (2026-08-03)
+
+
+### Features
+
+* **admin:** панельная идентичность под Remnawave 3.0.0 ([e840ed2](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/e840ed2b60f5e525cb290ce5bddc70ef6dfe8a66))
+
+
+### Bug Fixes
+
+* **settings:** вернуть в админку категории, которых не было в дереве ([653d683](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/653d683835e2c10f7690f1f71df3552c3ba9ab2f))
+
+## [1.64.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.63.0...v1.64.0) (2026-07-29)
+
+
+### Features
+
+* **auth:** чекбоксы согласия с офертой и политикой при первой авторизации ([0f21629](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/0f21629ba516118790c5d7f65df18f485dfaeafe))
+* **branding:** загрузка видео стартового меню бота ([c9afea7](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c9afea7a5043e2a3b02d2242a116878fc70a0be6))
+* **coupons:** лимит на пользователя и удаление партии в кабинете ([390da33](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/390da33914eb3f992719e33acf85decac660a880))
+* **gift:** QR подарка и сканирование в кабинете ([0e4dc43](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/0e4dc43335135fe229ce3c695fd7fa2722eb87e4))
+* **lava:** автопродление Lava на странице подписки ([2dce539](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2dce539da2a7c3128084ed2bc6bcdf560d440c75))
+* **lava:** покупка привязкой, продукт тарифа в админке, CTA ([a28f116](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a28f1167f7af57bfc6e5c7c370849e7478ec459f))
+* **promo-offers:** охват сегментов и прогресс доставки на странице отправки ([c6d8c0a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c6d8c0afe0a30b864a9d0834735fdc7b52d8f362))
+
+
+### Bug Fixes
+
+* **admin:** фиксированный телеграм-синий у свотча «Синий» вместо акцента темы ([62aaa5d](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/62aaa5d7c9eaedb5a118469587a35585f9e4f549))
+* **i18n:** починка плейсхолдеров и переводов в zh/fa/en локалях кабинета ([fb1f5cf](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/fb1f5cf3a762f55f18806be97a0db973316ff6ad))
+* **i18n:** существующие ключи вместо отсутствующих common.units.* на экране продления ([516399c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/516399cef9fa4a100b5dae979a04fafe0d05e634))
+* **security:** SRI для CDN-скрипта сканера QR ([b615927](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b615927283d9ae530c03f6120b3c5794d92e0689))
+* **subscription:** корректная цена за месяц при выборе периода ([888a02f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/888a02f39722c68e4beddefbd1e39c402dfa51cb))
+
+## [1.63.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.62.0...v1.63.0) (2026-07-24)
+
+
+### Features
+
+* **admin:** статус и отмена СБП-автопродления в карточке юзера ([3328493](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/332849393c00fa4f7e143af2b293a2775c0a4e8e))
+* **balance:** СБП-привязки в сохранённых методах ([d938ac2](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/d938ac2dd9d9f9e27142ed578e17cc7d76ca4531))
+* **sbp-recurring:** СБП-оформление подписки на форме покупки тарифа ([f448c14](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f448c149946cefee83e0e61f9c3c03b0d69a4362))
+* **subscription:** API и утилиты СБП-автопродления Platega ([9093aec](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/9093aec207bbc41e07433d55a90f9464c33a4b39))
+* **subscription:** блок СБП-автопродления на странице подписки ([29a3683](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/29a36837c8ad1310cce8fafa3e28f041c69a8d37))
+* **ws:** уведомления о событиях СБП-автопродления ([e8409a9](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/e8409a9007e25c685ceaa4b6a88c54237b02303a))
+
+
+### Bug Fixes
+
+* **auth:** различать устаревшего бота и ненастроенного на экране логина ([b3b07c3](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b3b07c322de5ce48db83661a020dfe96be5b2237))
+* **blocking:** локализовать дефолтное сообщение на экране подписки на канал ([5e2e321](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/5e2e3214c9e997896860f952aec774aecbbf49a4))
+* **ci:** рабочий Trivy-пин, lowercase-референс образа, CodeQL v4 ([0a8b1a4](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/0a8b1a46d134c88f0222987dd40707d85368ff5a))
+* **connection:** открывать deep-link приложения на iOS через top-level переход, а не iframe ([03aa2e6](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/03aa2e6312ae602f087d30d7134020acb6338537))
+* **dashboard:** приветствие без пустого имени для email-пользователей ([147b1fb](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/147b1fbb2e78bb8b3e0bd690568ea47c429c08c9))
+* **referral:** показывать секцию вывода средств всем реферерам ([ce13792](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/ce13792f96547331f6a5093b7ff5b5ed32d840d9))
+* **sbp-recurring:** toast ошибки отмены + per-sub ключ inline-confirm в админке ([42a7190](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/42a71902418d3f5e8cd34c225442db40a9a1cf0d))
+* **sbp-recurring:** компактный layout СБП-блока на десктопе ([faf4c45](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/faf4c450b0e995e68fdce6f236a0a1a2de5e85c7))
+* **sbp-recurring:** отступ между тогглом автопродления и СБП-блоком ([17e27d3](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/17e27d343786e9b7e9e013d7c7e1d9e96de6e058))
+* **security:** внутренний гард openAppScheme от опасных схем (CodeQL) ([aa6bf44](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/aa6bf44db9808aa79e0d711c0331e75171be75c0))
+* **security:** инлайновые regex-барьеры для CodeQL в openAppScheme и redirect.html ([51d0f04](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/51d0f0431a121ad179eb5b376fbab539018040dd))
+* **support:** не склеивать t.me со ссылкой на внешний хелпдеск ([f04675b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f04675b2498abbbfb41ba48e0dd8cf7ee3a5a0a1))
+* **support:** ужесточить resolveSupportContact — схема, legacy-username, null ([ebde1f6](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/ebde1f6174552ab4bef7f1fef8ef7950942781e7))
+* **tariffs:** отправлять пустые промогруппы и описание при редактировании тарифа ([f1413de](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f1413de5984859e20a58e3212270ccd1495a6954))
+
+## [1.62.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.61.0...v1.62.0) (2026-07-19)
+
+
+### Features
+
+* **payments:** способ оплаты cisPay ([4b98217](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/4b982175d75f5d7d43312859cc061462b52f9570))
+* **promocodes:** состав промокода чекбоксами — баланс / дни / промогруппа ([9ce838b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/9ce838badeda4dde45b16f38458e260a100fb39d))
+* **referral-network:** кнопка построения полной реферальной сети ([19facf2](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/19facf2ba968212ba9f1bb974ce886e9facc348f))
+* **users:** кнопка «Отправить сообщение» в карточке пользователя ([2f743d8](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2f743d82dbb4d737fcb5f54dda5269271bae3de2))
+
+
+### Bug Fixes
+
+* **admin:** дубликат ключа admin.paymentMethods.description ([46c1bc7](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/46c1bc79a454c71b469a64f82f90a9585f265ab0))
+* **i18n:** добавить недостающие английские переводы resetPassword и expiredDate_trial ([dd50d64](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/dd50d648d069bb69db54d18d8e3bdf6bec965872))
+* **i18n:** форматировать даты и числа локалью выбранного языка, а не браузера ([81fd96c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/81fd96c2a758d8d092289dbaefa105b29f54137d))
+* **payment-methods:** admin display_name/description override locale on balance ([112e09b](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/112e09bc6d1f0776f3f98602151a7730a8ed9245))
+
+## [1.61.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.60.0...v1.61.0) (2026-07-13)
+
+
+### Features
+
+* **admin:** бейдж «Команда» для команд бота в таймлайне активности ([f9ee16a](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/f9ee16a2e67ed36b8672dd35b4a27d075743cc0a))
+* **admin:** вкладка «Активность» в карточке пользователя ([7547b49](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/7547b49d7a58745487693040537ddfb1bfa9dd43))
+* **admin:** клики кнопок бота и действия в кабинете во вкладке «Активность» ([5fc8e7f](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/5fc8e7f97a2f09f4d81ff17fa3914eacc7db58b7))
+* **broadcasts:** поле icon_custom_emoji_id для кастомных кнопок рассылки ([b4b4bca](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b4b4bca2cb290c1be4ae4c076593200c686b72c5))
+* **broadcasts:** поле icon_custom_emoji_id у кастомных кнопок рассылки ([eeb715c](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/eeb715c09535a4e1d2489cd2c9d5969346718a26))
+* **navigation:** startapp=trial → дашборд (оплата платного триала из rich-меню) ([c920330](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/c920330fa606350c40c3ecaeb83651d5100b3f15))
+* **navigation:** роутинг startapp-диплинков rich-меню бота ([2eaea75](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/2eaea75fd93f1db3a0203ff308f365b11079cbc4))
+
+
+### Bug Fixes
+
+* **docker:** слушать IPv6 в nginx — healthcheck на localhost уводил контейнер в unhealthy ([a47e9ab](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a47e9ab6999a5da4d9574e3a00bb3ed18a461971))
+* **docker:** слушать IPv6 в nginx — healthcheck на localhost уводил контейнер в unhealthy ([ce4ce04](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/ce4ce046ba34b6439befda2899b87b77316c4030))
+* **header:** кэшировать список языков — переключатель не мигает при смене страницы ([a7ff8a6](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/a7ff8a6b09281df2b971cddf30a95a4f8b774205))
+* **subscription:** fall back to purchase flow for free-tariff switches ([9f909b0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/9f909b0f2c22bf9c37ba4e0a74cf7dbaf36e5a02))
+* **subscription:** fall back to purchase flow for free-tariff switches ([255777e](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/255777e7d1db7af09963d397a187bf0d15cc5b39))
+* **ui:** не перезапускать анимированный фон при смене страницы ([1ea9b99](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/1ea9b99ab579f709db440b103cd37f93b92927ca))
+* **ui:** сдвиг страницы, мигание переключателя языка и перезапуск фона при SPA-навигации ([478a693](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/478a6930198503ab93d9a2d2c5db0d6cbc5a84ef))
+* **ui:** фиксированная ширина 100vw — страницы не сдвигаются при появлении скроллбара ([b40f939](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/b40f939e914453d3080bde6051a7dbcf66a42321))
+
+## [1.60.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.59.0...v1.60.0) (2026-07-12)
+
+
+### Features
+
+* **admin:** предупреждение о разбивке длинных текстов системных страниц в боте ([93cfca4](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/93cfca46dc133662329aa0ec8196f91f15ba4b3a))
+* **coupons:** раздел оптовых купонов + публичная страница активации ([799e986](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/799e986d841aadf8a02ccc8287320a025e6a0aac))
+* **legal:** wire recurrent-payments document + restore footer link ([20565b8](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/20565b8f593f99533a016ae4706fc1030a8a8d57))
+
+
+### Bug Fixes
+
+* **auth:** make login footer legal links open real pages, not the login tab ([37a53e4](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/37a53e40ea37cdba0882f98455d8b00bc9dde2d2))
+* **connection:** keep the Happ add-subscription button working on Remnawave 2.8.0 ([8f31311](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/8f31311112979beebeccf2952adcb8f2d4580fdd))
+* **ui:** контент, пришедший из API после mount, оставался невидимым (stagger) ([adaaa23](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/adaaa23da390ccdbc8938488fa9d36a00dc9c1db))
+* **ui:** нормализовать detail из ответов API перед рендером — краш на 422 ([9b97293](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/commit/9b972931cf8ea85f84538bf0b421df2730c4db66))
+
 ## [1.59.0](https://github.com/BEDOLAGA-DEV/bedolaga-cabinet/compare/v1.58.0...v1.59.0) (2026-06-30)
 
 

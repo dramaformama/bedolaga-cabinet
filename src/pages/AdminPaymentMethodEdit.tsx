@@ -13,6 +13,7 @@ import { createNumberInputHandler, toNumber } from '../utils/inputHelpers';
 import { localeMap } from '../utils/withdrawalUtils';
 import { PermissionGate } from '@/components/auth/PermissionGate';
 import { BackIcon, CheckIcon, SaveIcon } from '@/components/icons';
+import { PageSkeleton, Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 function extractErrorDetail(err: unknown): string | null {
   const error = err as { response?: { data?: { detail?: unknown } } };
@@ -106,7 +107,9 @@ function OverpayCertificateSection() {
       </h3>
 
       {isLoading ? (
-        <div className="skeleton h-10 w-full rounded-xl" />
+        <SkeletonGroup>
+          <Skeleton className="h-10 w-full rounded-xl" />
+        </SkeletonGroup>
       ) : certStatus ? (
         <div>
           {certStatus.valid ? (
@@ -232,6 +235,7 @@ export default function AdminPaymentMethodEdit() {
   // Local state for editing
   const [isEnabled, setIsEnabled] = useState(false);
   const [customName, setCustomName] = useState('');
+  const [customDesc, setCustomDesc] = useState('');
   const [subOptions, setSubOptions] = useState<Record<string, boolean>>({});
   const [minAmount, setMinAmount] = useState<number | ''>('');
   const [maxAmount, setMaxAmount] = useState<number | ''>('');
@@ -249,6 +253,7 @@ export default function AdminPaymentMethodEdit() {
     if (config) {
       setIsEnabled(config.is_enabled);
       setCustomName(config.display_name || '');
+      setCustomDesc(config.description || '');
       setSubOptions(config.sub_options || {});
       setMinAmount(config.min_amount_kopeks ?? '');
       setMaxAmount(config.max_amount_kopeks ?? '');
@@ -288,6 +293,13 @@ export default function AdminPaymentMethodEdit() {
       data.display_name = customName.trim();
     } else {
       data.reset_display_name = true;
+    }
+
+    // Description
+    if (customDesc.trim()) {
+      data.description = customDesc.trim();
+    } else {
+      data.reset_description = true;
     }
 
     // Sub-options
@@ -350,9 +362,9 @@ export default function AdminPaymentMethodEdit() {
 
   if (isLoading) {
     return (
-      <div className="min-h-viewport flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-      </div>
+      <PageSkeleton variant="admin" leading={1} titleWidth="w-56" className="space-y-6">
+        <Skeleton variant="card" className="h-96" />
+      </PageSkeleton>
     );
   }
 
@@ -476,6 +488,20 @@ export default function AdminPaymentMethodEdit() {
           <p className="mt-1 text-xs text-dark-500">
             {t('admin.paymentMethods.displayNameHint')}: {config.default_display_name}
           </p>
+        </div>
+
+        {/* Description */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-dark-300">
+            {t('admin.paymentMethods.description')}
+          </label>
+          <textarea
+            value={customDesc}
+            onChange={(e) => setCustomDesc(e.target.value)}
+            rows={2}
+            className="input"
+          />
+          <p className="mt-1 text-xs text-dark-500">{t('admin.paymentMethods.descriptionHint')}</p>
         </div>
 
         {/* Sub-options */}

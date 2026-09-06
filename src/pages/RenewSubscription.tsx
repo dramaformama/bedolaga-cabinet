@@ -5,10 +5,12 @@ import { Navigate, useNavigate, useParams } from 'react-router';
 import { subscriptionApi } from '../api/subscription';
 import { useTheme } from '../hooks/useTheme';
 import { getGlassColors } from '../utils/glassTheme';
+import { getMonthlyPriceKopeks } from '../utils/pricing';
 import { useCurrency } from '../hooks/useCurrency';
 import { useHaptic } from '../platform';
 import InsufficientBalancePrompt from '../components/InsufficientBalancePrompt';
 import { WebBackButton } from '../components/WebBackButton';
+import { PageSkeleton, Skeleton } from '../components/ui/skeleton';
 
 export default function RenewSubscription() {
   const { subscriptionId } = useParams<{ subscriptionId: string }>();
@@ -89,9 +91,12 @@ export default function RenewSubscription() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-64 items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-      </div>
+      <PageSkeleton leading={1} titleWidth="w-56" className="space-y-5">
+        <Skeleton variant="card" className="h-16" />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Skeleton variant="card" count={4} className="h-20" />
+        </div>
+      </PageSkeleton>
     );
   }
 
@@ -143,8 +148,7 @@ export default function RenewSubscription() {
           {options.map((option) => {
             const isSelected = selectedPeriod === option.period_days;
             const canAfford = balanceKopeks >= option.price_kopeks;
-            const months = Math.max(1, Math.round(option.period_days / 30));
-            const perMonth = option.price_kopeks / months;
+            const perMonth = getMonthlyPriceKopeks(option.price_kopeks, option.period_days);
 
             return (
               <button
@@ -167,7 +171,7 @@ export default function RenewSubscription() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-base font-semibold" style={{ color: g.text }}>
-                      {option.period_days} {t('common.units.days', 'дней')}
+                      {option.period_days} {t('subscription.days', 'дней')}
                     </span>
                     {option.discount_percent > 0 && (
                       <span className="ml-2 rounded-full bg-success-400/15 px-2 py-0.5 text-[10px] font-semibold text-success-400">
@@ -181,10 +185,10 @@ export default function RenewSubscription() {
                         ? t('subscription.free', 'Бесплатно')
                         : `${formatAmount(option.price_kopeks / 100)} ${currencySymbol}`}
                     </div>
-                    {months > 1 && (
+                    {perMonth !== null && (
                       <div className="text-[11px]" style={{ color: g.textSecondary }}>
                         {formatAmount(perMonth / 100)} {currencySymbol}/
-                        {t('common.units.mo', 'мес')}
+                        {t('subscription.month', 'мес')}
                       </div>
                     )}
                     {option.original_price_kopeks && (

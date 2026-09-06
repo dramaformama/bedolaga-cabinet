@@ -1,7 +1,8 @@
-import {} from 'react';
+import { uiLocale } from '@/utils/uiLocale';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { promoApi, LoyaltyTierInfo } from '../api/promo';
+import { promoApi, type LoyaltyTierInfo } from '../api/promo';
+import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 const StarIcon = () => (
   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -55,7 +56,7 @@ export default function Info() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('ru-RU', {
+    return new Intl.NumberFormat(uiLocale(), {
       style: 'currency',
       currency: 'RUB',
       minimumFractionDigits: 0,
@@ -73,9 +74,9 @@ export default function Info() {
 
       {/* Контент */}
       {loyaltyLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-        </div>
+        <SkeletonGroup className="space-y-3">
+          <Skeleton variant="card" count={3} className="h-16" />
+        </SkeletonGroup>
       ) : !loyaltyData || loyaltyData.tiers.length === 0 ? (
         <div className="py-8 text-center text-dark-400">{t('info.noLoyaltyTiers')}</div>
       ) : (

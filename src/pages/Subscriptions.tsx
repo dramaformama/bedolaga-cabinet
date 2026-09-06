@@ -8,8 +8,10 @@ import { balanceApi } from '../api/balance';
 import { useTheme } from '../hooks/useTheme';
 import { getGlassColors } from '../utils/glassTheme';
 import { useAuthStore } from '../store/auth';
+import { getApiErrorMessage } from '../utils/api-error';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
+import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 function EmptyState({ onBuy }: { onBuy: () => void }) {
   const { t } = useTranslation();
@@ -96,8 +98,8 @@ export default function Subscriptions() {
       queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
       refreshUser();
     },
-    onError: (error: { response?: { data?: { detail?: string } } }) => {
-      setTrialError(error.response?.data?.detail || t('common.error'));
+    onError: (error: unknown) => {
+      setTrialError(getApiErrorMessage(error, t('common.error')));
     },
   });
 
@@ -144,15 +146,17 @@ export default function Subscriptions() {
 
       {/* Loading */}
       {isLoading && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <SkeletonGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {[1, 2].map((i) => (
-            <div
+            <Skeleton
               key={i}
-              className="h-36 animate-pulse rounded-2xl"
+              variant="card"
+              // Фон и рамку задаёт стеклянная тема, поэтому вариантную заливку гасим.
+              className="h-36 border-0 bg-transparent"
               style={{ background: g.innerBg }}
             />
           ))}
-        </div>
+        </SkeletonGroup>
       )}
 
       {/* Empty state: показываем триал, если доступен; иначе — обычный empty */}

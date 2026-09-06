@@ -1,8 +1,14 @@
 import {
+  PiArrowsInSimple,
+  PiArrowsOutSimple,
+  PiCode,
+  PiMapTrifold,
+  PiNetwork,
   PiSlidersHorizontal,
   PiWrench,
   PiBookOpen,
   PiHeadset,
+  PiLifebuoy,
   PiArrowDown,
   PiArrowRight,
   PiArrowUp,
@@ -264,6 +270,27 @@ export const ExternalLinkIcon = ({ className }: IconProps) => (
   <PiArrowSquareOut className={cn('h-5 w-5', className)} />
 );
 
+export const CodeIcon = ({ className }: IconProps) => (
+  <PiCode className={cn('h-5 w-5', className)} />
+);
+
+export const CollapseIcon = ({ className }: IconProps) => (
+  <PiArrowsInSimple className={cn('h-5 w-5', className)} />
+);
+
+export const ExpandIcon = ({ className }: IconProps) => (
+  <PiArrowsOutSimple className={cn('h-5 w-5', className)} />
+);
+
+/** GeoCheck — проверка геоданных ноды (Remnawave 3.3.0). */
+export const GeoCheckIcon = ({ className }: IconProps) => (
+  <PiMapTrifold className={cn('h-5 w-5', className)} />
+);
+
+export const NetworkIcon = ({ className }: IconProps) => (
+  <PiNetwork className={cn('h-5 w-5', className)} />
+);
+
 export const EyeIcon = ({ className }: IconProps) => <PiEye className={cn('h-5 w-5', className)} />;
 
 export const FileTextIcon = ({ className }: IconProps) => (
@@ -288,6 +315,10 @@ export const HealthIcon = ({ className }: IconProps) => (
 
 export const HistoryIcon = ({ className }: IconProps) => (
   <PiClockCounterClockwise className={cn('h-5 w-5', className)} />
+);
+
+export const LifebuoyIcon = ({ className }: IconProps) => (
+  <PiLifebuoy className={cn('h-5 w-5', className)} />
 );
 
 export const ImageIcon = ({ className }: IconProps) => (

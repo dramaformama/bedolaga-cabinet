@@ -1,3 +1,4 @@
+import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +22,7 @@ import { Button } from '@/components/primitives/Button';
 import { ChevronRightIcon, CreditCardIcon, WalletIcon } from '@/components/icons';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
+import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 export default function Balance() {
   const { t } = useTranslation();
@@ -310,18 +312,20 @@ export default function Balance() {
       {paymentMethodsLoading ? (
         <motion.div variants={staggerItem}>
           <Card>
-            <div className="skeleton mb-4 h-6 w-36" />
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="rounded-[var(--bento-radius)] border border-dark-700/30 p-4"
-                >
-                  <div className="skeleton mb-2 h-4 w-24" />
-                  <div className="skeleton h-3 w-32" />
-                </div>
-              ))}
-            </div>
+            <SkeletonGroup>
+              <Skeleton className="mb-4 h-6 w-36" />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="rounded-[var(--bento-radius)] border border-dark-700/30 p-4"
+                  >
+                    <Skeleton className="mb-2 h-4 w-24" />
+                    <Skeleton className="h-3 w-32" />
+                  </div>
+                ))}
+              </div>
+            </SkeletonGroup>
           </Card>
         </motion.div>
       ) : (
@@ -352,11 +356,11 @@ export default function Balance() {
                       }
                     >
                       <div className="font-semibold text-dark-100">
-                        {translatedName || method.name}
+                        {method.name || translatedName}
                       </div>
-                      {(translatedDesc || method.description) && (
+                      {(method.description || translatedDesc) && (
                         <div className="mt-1 text-sm text-dark-500">
-                          {translatedDesc || method.description}
+                          {method.description || translatedDesc}
                         </div>
                       )}
                       <div className="mt-3 text-xs text-dark-600">
@@ -469,9 +473,9 @@ export default function Balance() {
           </h2>
 
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-            </div>
+            <SkeletonGroup className="space-y-3">
+              <Skeleton variant="card" count={3} className="h-16" />
+            </SkeletonGroup>
           ) : visibleTransactions && visibleTransactions.length > 0 ? (
             <>
               <motion.div
@@ -501,7 +505,7 @@ export default function Balance() {
                         <div className="mb-1 flex items-center gap-3">
                           <span className={getTypeBadge(tx.type)}>{getTypeLabel(tx.type)}</span>
                           <span className="text-xs text-dark-500">
-                            {new Date(tx.created_at).toLocaleDateString()}
+                            {new Date(tx.created_at).toLocaleDateString(uiLocale())}
                           </span>
                         </div>
                         {tx.description && (
@@ -570,9 +574,10 @@ export default function Balance() {
         </Card>
       </motion.div>
 
-      {/* Saved Cards Navigation */}
+      {/* Saved Cards Navigation — self-animated: mounts after its query resolves
+          (see Payment Methods above) */}
       {savedCardsData?.recurrent_enabled && (
-        <motion.div variants={staggerItem}>
+        <motion.div variants={staggerItem} initial="initial" animate="animate">
           <Card interactive onClick={() => navigate('/balance/saved-cards')}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

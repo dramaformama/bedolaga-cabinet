@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
-import { promocodesApi, PromoCode, PromoCodeType } from '../api/promocodes';
+import { promocodesApi, type PromoCode, type PromoCodeType } from '../api/promocodes';
 import { usePlatform } from '../platform/hooks/usePlatform';
 import { copyToClipboard } from '../utils/clipboard';
 import {
@@ -20,6 +20,7 @@ import {
   TicketIcon,
 } from '@/components/icons';
 import { StatCard } from '../components/stats';
+import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 // Helper functions
 const getTypeLabel = (type: PromoCodeType): string => {
@@ -29,6 +30,7 @@ const getTypeLabel = (type: PromoCodeType): string => {
     trial_subscription: i18n.t('admin.promocodes.type.trialSubscription'),
     promo_group: i18n.t('admin.promocodes.type.promoGroup'),
     discount: i18n.t('admin.promocodes.type.discount'),
+    balance_and_days: i18n.t('admin.promocodes.type.balanceAndDays'),
   };
   return labels[type] || type;
 };
@@ -40,6 +42,7 @@ const getTypeColor = (type: PromoCodeType): string => {
     trial_subscription: 'bg-accent-500/20 text-accent-400',
     promo_group: 'bg-warning-500/20 text-warning-400',
     discount: 'bg-pink-500/20 text-pink-400',
+    balance_and_days: 'bg-success-500/20 text-success-400',
   };
   return colors[type] || 'bg-dark-600 text-dark-300';
 };
@@ -147,9 +150,9 @@ export default function AdminPromocodes() {
 
       {/* Promocodes List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-        </div>
+        <SkeletonGroup className="space-y-3">
+          <Skeleton variant="card" count={3} className="h-16" />
+        </SkeletonGroup>
       ) : promocodes.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-dark-400">{t('admin.promocodes.noPromocodes')}</p>
@@ -194,15 +197,27 @@ export default function AdminPromocodes() {
                   </div>
                   {/* Info line */}
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-dark-400">
-                    {promo.type === 'balance' && (
-                      <span className="text-success-400">
-                        +{promo.balance_bonus_rubles} {t('admin.promocodes.form.rub')}
-                      </span>
-                    )}
+                    {/* Составляющие показываем по значению, а не по типу:
+                        balance_and_days теперь стоит и у набора, где баланса
+                        или дней нет вовсе, — иначе в списке висело бы «+0 ₽
+                        +0 дн.» у кода, который на самом деле раздаёт трафик. */}
+                    {(promo.type === 'balance' || promo.type === 'balance_and_days') &&
+                      promo.balance_bonus_rubles > 0 && (
+                        <span className="text-success-400">
+                          +{promo.balance_bonus_rubles} {t('admin.promocodes.form.rub')}
+                        </span>
+                      )}
                     {(promo.type === 'subscription_days' ||
-                      promo.type === 'trial_subscription') && (
+                      promo.type === 'trial_subscription' ||
+                      promo.type === 'balance_and_days') &&
+                      promo.subscription_days > 0 && (
+                        <span className="text-accent-400">
+                          +{promo.subscription_days} {t('admin.promocodes.form.days')}
+                        </span>
+                      )}
+                    {promo.type === 'balance_and_days' && (promo.traffic_gb || 0) > 0 && (
                       <span className="text-accent-400">
-                        +{promo.subscription_days} {t('admin.promocodes.form.days')}
+                        +{promo.traffic_gb} {t('admin.promocodes.form.gb')}
                       </span>
                     )}
                     {promo.type === 'discount' && (

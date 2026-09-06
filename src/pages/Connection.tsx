@@ -13,6 +13,7 @@ import { isHappCryptolinkMode, resolveConnectionUrlForUi } from '../utils/connec
 import { useAuthStore } from '../store/auth';
 import type { AppConfig, RemnawavePlatformData } from '../types';
 import InstallationGuide from '../components/connection/InstallationGuide';
+import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 export default function Connection() {
   const { t, i18n } = useTranslation();
@@ -114,11 +115,19 @@ export default function Connection() {
   const openDeepLink = useCallback(
     (deepLink: string) => {
       let resolved = deepLink;
-      if (isHappCryptolinkMode(connectionLink?.connect_mode) && qrConnectionUrl) {
-        // In HAPP cryptolink mode always open the resolved happ://crypt... URL.
-        resolved = qrConnectionUrl;
-      } else if (hasTemplates(resolved)) {
+      if (hasTemplates(resolved)) {
         resolved = resolveUrl(resolved);
+      }
+      // In HAPP cryptolink mode keep hiding the plain subscription link: force the
+      // happ://crypt... URL only when the button fell back to it or its template
+      // could not be resolved. An explicit link from the panel's Subpage config
+      // (e.g. happ://add/...) wins — admins expect Subpage edits to apply here.
+      if (
+        isHappCryptolinkMode(connectionLink?.connect_mode) &&
+        qrConnectionUrl &&
+        (!resolved || resolved === appConfig?.subscriptionUrl || hasTemplates(resolved))
+      ) {
+        resolved = qrConnectionUrl;
       }
       const isHttpUrl = /^https?:\/\//i.test(resolved);
       const finalUrlForTelegram = isHttpUrl
@@ -140,7 +149,14 @@ export default function Connection() {
       // still navigate normally. (Telegram bug #654272.)
       openAppScheme(resolved);
     },
-    [isTelegramWebApp, i18n.language, resolveUrl, connectionLink?.connect_mode, qrConnectionUrl],
+    [
+      isTelegramWebApp,
+      i18n.language,
+      resolveUrl,
+      connectionLink?.connect_mode,
+      qrConnectionUrl,
+      appConfig?.subscriptionUrl,
+    ],
   );
 
   // Check if any platform has configured apps
@@ -153,9 +169,15 @@ export default function Connection() {
 
   if (isLoading || isConnectionLinkLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center py-20">
-        <div className="h-10 w-10 animate-spin rounded-full border-[3px] border-accent-500/30 border-t-accent-500" />
-      </div>
+      <SkeletonGroup className="space-y-6 pb-6">
+        {/* Повторяет шапку InstallationGuide: кнопка «назад», заголовок, выбор платформы. */}
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
+          <Skeleton className="h-6 flex-1" />
+          <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
+        </div>
+        <Skeleton variant="card" count={3} className="h-24" />
+      </SkeletonGroup>
     );
   }
 
@@ -217,6 +239,7 @@ export default function Connection() {
       isTelegramWebApp={isTelegramWebApp}
       onGoBack={handleGoBack}
       onOpenQR={handleOpenQR}
+      username={user?.username ?? undefined}
     />
   );
 }
