@@ -294,7 +294,7 @@
     "linkAccountBanner": {
       "title": "添加登录方式",
       "subtitle": "您目前只有一种登录方式。请绑定邮箱或 Telegram，以免无法访问账户。",
-      "cta": "绑定邮箱"
+      "cta": "绑定账号"
     },
     "devicesUsed": "设备：{{used}} / {{total}}",
     "trafficUsed": "流量：{{used}} / {{total}} GB",

@@ -334,7 +334,7 @@ export default function Dashboard() {
       {showLinkAccountBanner && (
         <Link
           to="/profile/accounts"
-          className="flex items-center gap-3 rounded-2xl border border-accent-500/30 bg-accent-500/10 p-4 transition-colors hover:bg-accent-500/15"
+          className="group flex items-center gap-3 rounded-2xl border border-accent-500/30 bg-accent-500/10 p-4 transition-colors hover:bg-accent-500/15"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/20 text-accent-400">
             <LockIcon className="h-5 w-5" />
@@ -345,7 +345,7 @@ export default function Dashboard() {
               {t('dashboard.linkAccountBanner.subtitle')}
             </p>
           </div>
-          <span className="shrink-0 whitespace-nowrap rounded-xl bg-accent-500 px-3.5 py-2 text-sm font-semibold text-on-accent">
+          <span className="shrink-0 whitespace-nowrap rounded-xl bg-accent-500 px-3.5 py-2 text-sm font-semibold text-on-accent shadow-linear-sm transition-colors group-hover:bg-accent-600">
             {t('dashboard.linkAccountBanner.cta')}
           </span>
         </Link>
