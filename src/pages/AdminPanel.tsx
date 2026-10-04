@@ -9,6 +9,7 @@ import { useTelegramSDK } from '@/hooks/useTelegramSDK';
 import { cn } from '@/lib/utils';
 import {
   ArrowUpIcon,
+  BellIcon,
   BroadcastIcon,
   CabinetIcon,
   ChartBarIcon,
@@ -50,6 +51,7 @@ import {
   WheelIcon,
   XIcon,
   RadarIcon,
+  WallIcon,
 } from '@/components/icons';
 
 const CABINET_VERSION = __APP_VERSION__;
@@ -74,6 +76,7 @@ const icons = {
   megaphone: <MegaphoneIcon />,
   send: <SendIcon />,
   pin: <PinIcon />,
+  bell: <BellIcon />,
   'circle-dot': <WheelIcon />,
   handshake: <PartnerIcon />,
   'arrow-up': <ArrowUpIcon />,
@@ -84,6 +87,7 @@ const icons = {
   server: <ServerIcon />,
   remnawave: <RemnawaveIcon />,
   radar: <RadarIcon />,
+  wall: <WallIcon />,
   mail: <MailIcon />,
   refresh: <SyncIcon />,
   shield: <ShieldIcon />,
@@ -248,6 +252,12 @@ const sections: AdminSection[] = [
         to: '/admin/pinned-messages',
         permission: 'pinned_messages:read',
       },
+      {
+        name: 'admin.nav.reminders',
+        icon: 'bell',
+        to: '/admin/reminders',
+        permission: 'user_reminders:read',
+      },
       { name: 'admin.nav.wheel', icon: 'circle-dot', to: '/admin/wheel', permission: 'wheel:read' },
       {
         name: 'admin.nav.partners',
@@ -327,6 +337,12 @@ const sections: AdminSection[] = [
         icon: 'radar',
         to: '/admin/reachability',
         permission: 'reachability:read',
+      },
+      {
+        name: 'admin.nav.dpichecker',
+        icon: 'wall',
+        to: '/admin/dpichecker',
+        permission: 'dpichecker:read',
       },
       {
         name: 'admin.nav.emailTemplates',
