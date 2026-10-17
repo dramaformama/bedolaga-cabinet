@@ -954,6 +954,7 @@
   let hIdx = 0;
   let breath = 0;
   let holdN = 0;
+  let passThrough = false;
 
   function finish() {
     if (done) return;
@@ -1000,7 +1001,15 @@
     }
     if (film >= T.end) return finish();
     // с начала раскрытия пропускать уже нечего, а кнопка закрывала бы нижнюю панель, куда садится точка
-    if (film >= T.flip[0] - 0.05 && skip.parentNode) skip.parentNode.removeChild(skip);
+    if (film >= T.flip[0] - 0.05) {
+      if (skip.parentNode) skip.parentNode.removeChild(skip);
+      // приложение уже видно сквозь окна растра и готово — касания должны доходить до него, а не
+      // тонуть в заставке (иначе первое нажатие на панель пропадало, и жать приходилось дважды)
+      if (!passThrough) {
+        passThrough = true;
+        wrap.style.pointerEvents = 'none';
+      }
+    }
     if (drawNow) seek(film, breath);
     sendReady();
     raf = requestAnimationFrame(frame);

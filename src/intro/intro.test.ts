@@ -281,6 +281,17 @@ describe('стартовая заставка', () => {
     expect(overlay()).not.toBeNull(); // сама заставка ещё идёт
   });
 
+  it('с началом раскрытия заставка пропускает касания к приложению (иначе первое нажатие на панель пропадает)', async () => {
+    enterTelegram();
+    renderApp(true);
+    await run();
+    frames(3);
+    expect((overlay() as HTMLElement).style.pointerEvents).toBe('');
+    frames(4.5); // полная: раскрытие начинается около 7,2 с
+    expect((overlay() as HTMLElement).style.pointerEvents).toBe('none');
+    expect(overlay()).not.toBeNull(); // заставка ещё идёт, но не перехватывает нажатия
+  });
+
   it('«Пропустить» сразу ведёт к раскрытию приложения', async () => {
     enterTelegram();
     renderApp(true);
