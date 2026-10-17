@@ -8,9 +8,10 @@
  * точки и за полсекунды «зажигают» её оранжевой; сразу после первого кадра уходит
  * web_app_ready, так что экран Telegram незаметно перетекает в заставку.
  *
- * Режимы: полный (~8 с) — при первом запуске, короткий (~2.3 с) — дальше.
+ * Режимы: полный (~8 с) — при первом запуске, короткий (~2.8 с) — дальше.
  * Перед раскрытием сайта заставка ждёт, пока приложение отрисуется (нет
- * [data-page-loader]), и в конце точка садится в активный пункт навигации
+ * [data-page-loader]); короткая, пока не смонтировался React, держит на экране
+ * слово berlinconnection. В конце точка садится в активный пункт навигации
  * ([data-intro-nav][aria-current="page"]: нижняя панель на телефоне, верхняя на
  * десктопе), а где навигации нет (вход) — в [data-intro-home], например логотип.
  * Ни того ни другого — точка просто садится и гаснет. В любом исходе заставка
@@ -226,6 +227,7 @@
   const CARRIED = {};
   for (const ci in CARRY) CARRIED[CARRY[ci]] = true;
 
+  const G_DUR = 0.95; // сколько растёт график скорости
   const T =
     MODE === 'full'
       ? {
@@ -238,48 +240,51 @@
           carry: 1.25,
           wordIn: 1.45,
           knobFly: 1.37,
-          jump: [2.3, 2.55],
-          wordOut: 2.3,
-          axis: [2.4, 2.65],
-          target: [2.47, 2.73],
-          graph: 2.55,
-          graphOut: [3.75, 4.01],
-          shoot: [3.77, 4.03],
-          grow: [4.03, 4.37],
-          hole: 4.25,
-          pill: 4.75,
-          fill: [5.05, 5.37],
-          orbit: 5.33,
-          orbitOut: 6.83,
-          wave: [6.93, 7.4],
-          flip: [7.3, 7.9],
-          home: [7.57, 8.11],
-          end: 8.27,
+          jump: [2.8, 3.05],
+          wordOut: 2.8, // слово целиком стоит ~0,9 с: это название сервиса
+          axis: [2.9, 3.15],
+          target: [2.97, 3.23],
+          graph: 3.05,
+          graphOut: [4.05, 4.31],
+          shoot: [4.07, 4.33],
+          grow: [4.33, 4.67],
+          hole: 4.55,
+          pill: 5.05,
+          fill: [5.35, 5.67],
+          orbit: 5.63,
+          orbitOut: 6.93,
+          wave: [7.03, 7.5],
+          flip: [7.4, 8.0],
+          home: [7.67, 8.21],
+          end: 8.37,
           outStagger: 0.012,
           outDur: 0.26,
         }
       : {
           wordIn: 0.12,
           rise: 0.15,
-          wordOut: 0.95,
-          jump: [0.95, 1.2],
-          wave: [1.24, 1.64],
-          flip: [1.58, 2.08],
-          home: [1.83, 2.33],
-          end: 2.47,
+          wordOut: 1.25,
+          jump: [1.25, 1.5],
+          wave: [1.54, 1.94],
+          flip: [1.88, 2.38],
+          home: [2.13, 2.63],
+          end: 2.77,
           outStagger: 0.006,
           outDur: 0.2,
         };
   // Здесь ждём, пока приложение отрисуется: слово и буквы уже ушли, на экране
   // ровное поле точек и «дышащая» оранжевая — кадр, на котором можно стоять.
   T.hold = T.flip[0] - 0.01;
+  // В короткой пока грузится сам бандл (React ещё ничего не нарисовал), стоим на слове:
+  // ожидание уходит на название сервиса. Данные страницы догружаются уже под полем точек.
+  T.brandHold = MODE === 'short' ? T.wordOut - 0.01 : -1;
 
   const HAPTICS =
     MODE === 'full'
       ? [
           [T.click, 'impact', 'light'],
           [T.knobFly + 0.28, 'impact', 'soft'],
-          [T.graph + 1.15, 'impact', 'medium'],
+          [T.graph + G_DUR, 'impact', 'medium'],
           [T.grow[1], 'impact', 'heavy'],
           [T.fill[1], 'impact', 'light'],
           [T.orbitOut, 'selection'],
@@ -318,7 +323,6 @@
     return 1 - Math.exp(-a * tau) * (Math.cos(wd * tau) + (a / wd) * Math.sin(wd * tau));
   }
   // график скорости: растёт всё время, к концу — 25 000 Мбит/с
-  const G_DUR = 1.15;
   const G_MAX = 25000;
   function gCurve(tau) {
     const k = clamp(tau / G_DUR, 0, 1);
@@ -467,6 +471,9 @@
     if (item) return center(item.querySelector('svg') || item);
     const spot = firstVisible('[data-intro-home]');
     return spot ? center(spot) : null;
+  }
+  function appMounted() {
+    return !!document.getElementById('root')?.firstElementChild;
   }
   function appReady() {
     const app = document.getElementById('root');
@@ -727,7 +734,7 @@
       let n = 0;
       for (let w = 0; w < WORD.length; w++) {
         if (MODE === 'full' && CARRIED[w]) continue;
-        const st = T.wordIn + n++ * (MODE === 'full' ? 0.024 : 0.018);
+        const st = T.wordIn + n++ * 0.018;
         const p = spring(t - st, 0.55, 20);
         const out2 = eIn(
           seg(t, T.wordOut + w * T.outStagger, T.wordOut + T.outDur + w * T.outStagger),
@@ -981,7 +988,9 @@
     readySince = ready ? readySince || now : 0;
     const settled = ready && now - readySince > 200;
     let drawNow = true;
-    if (film >= T.hold && !settled && held < 8) {
+    const waiting =
+      (film >= T.hold && !settled) || (film >= T.brandHold && film < T.wordOut && !appMounted());
+    if (waiting && held < 8) {
       // приложение ещё грузится: держим кадр, точка «дышит». Рисуем раз в три кадра (~20 к/с):
       // дыхание медленное, а процессор нужен самой загрузке приложения.
       held += dt;

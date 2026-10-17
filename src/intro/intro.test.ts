@@ -183,7 +183,7 @@ describe('стартовая заставка', () => {
     document.addEventListener('intro:done', done);
     await run();
 
-    frames(3); // короткая длится ~2.3 с, но приложения ещё нет — ждём
+    frames(3); // короткая длится ~2.8 с, но приложения ещё нет — ждём
     expect(overlay()).not.toBeNull();
     expect(done).not.toHaveBeenCalled();
 
@@ -198,6 +198,25 @@ describe('стартовая заставка', () => {
     expect(haptics.map((p) => p.data.type)).toEqual(['impact', 'notification']);
     expect(haptics[1].data).toEqual({ type: 'notification', notification_type: 'success' });
     document.removeEventListener('intro:done', done);
+  });
+
+  it('короткая: пока бандл грузится, стоит на слове, а данные страницы ждёт уже на поле точек', async () => {
+    enterTelegram();
+    localStorage.setItem('bc-intro-full-seen', '1');
+    await run();
+    frames(3); // React ещё ничего не нарисовал — заставка держит слово
+    renderApp(true);
+    const fromWord = frames(5);
+    expect(overlay()).toBeNull();
+    expect(fromWord).toBeGreaterThan(1.4); // от слова до конца: уход слова, волна, раскрытие
+
+    document.body.innerHTML = '<div id="root"><div data-page-loader></div></div>';
+    await run();
+    frames(3); // приложение смонтировано, но грузит данные — ждём на поле точек
+    renderApp(true);
+    const fromField = frames(5);
+    expect(overlay()).toBeNull();
+    expect(fromField).toBeLessThan(1.2); // только раскрытие
   });
 
   it('полная: вибрация на каждом ключевом моменте, в конце — success', async () => {
