@@ -363,7 +363,7 @@
     }
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     const u = Math.min(W / 1100, H / 1000);
-    L = { W: W, H: H, cx: W / 2, cy: H / 2, u: u };
+    L = { W: W, H: H, cx: W / 2, cy: H / 2, u: u, dpr: DPR, spr: {} };
     L.Rc = Math.hypot(W, H) / 2 + 4;
     L.r0 = Math.max(9, Math.min(W, H) * 0.034); // точка с экрана загрузки Telegram
 
@@ -472,6 +472,42 @@
   }
 
   /* ── отрисовка ── */
+  // Буквы кольца и точки растра рисуются один раз в маленький холст и дальше только копируются:
+  // fillText и arc на каждую из сотен фигур каждого кадра — самое дорогое для телефона.
+  function sprite(key, w, h, draw) {
+    const s = L.spr[key];
+    if (s) return s;
+    const c = document.createElement('canvas');
+    const x = c.getContext('2d');
+    c.width = Math.ceil(w * L.dpr);
+    c.height = Math.ceil(h * L.dpr);
+    x.scale(L.dpr, L.dpr);
+    draw(x);
+    L.spr[key] = { c: c, w: w, h: h };
+    return L.spr[key];
+  }
+  function letter(ch, col) {
+    ctx.font = font(L.ofs, 600);
+    const w = Math.ceil(ctx.measureText(ch).width + L.ofs * 0.4);
+    const h = Math.ceil(L.ofs * 1.6);
+    return sprite(`l${ch}${col}`, w, h, (x) => {
+      x.font = font(L.ofs, 600);
+      x.textAlign = 'center';
+      x.textBaseline = 'middle';
+      x.fillStyle = col;
+      x.fillText(ch, w / 2, h / 2);
+    });
+  }
+  const DISC = 16; // радиус точки-заготовки, px: крупнее любой точки растра, чтобы копия не мылилась
+  function disc() {
+    return sprite('disc', DISC * 2, DISC * 2, (x) => {
+      x.fillStyle = TX;
+      x.beginPath();
+      x.arc(DISC, DISC, DISC, 0, 2 * PI);
+      x.fill();
+    });
+  }
+  const odx = []; // точки рассыпавшихся букв кольца (x, y, яркость) — рисуются одной пачкой
   function dot(x, y, r, col) {
     ctx.fillStyle = col;
     ctx.beginPath();
@@ -610,9 +646,8 @@
     let i;
     ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
-    ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = BG;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, H); // непрозрачная заливка и так затирает прошлый кадр
     const o = orange(t);
     const dotCol = OR;
 
@@ -792,9 +827,6 @@
 
     /* 4 · платформы вокруг точки → разлетаются в мелкие точки */
     if (MODE === 'full' && t > T.orbit && t < T.wave[0] + 0.4) {
-      ctx.font = font(L.ofs, 600);
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
       const spin = -(t - T.orbit) * 0.38 - 1.1 * (1 - eOut(seg(t, T.orbit, T.orbit + 0.7)));
       for (i = 0; i < L.orbit.length; i++) {
         const ol = L.orbit[i];
@@ -806,22 +838,29 @@
         const th2 = -PI / 2 + spin + ol.s;
         const lx = cx + Math.cos(th2) * rad;
         const ly = cy + Math.sin(th2) * rad;
-        glyph(
-          ol.ch,
-          lx,
-          ly,
-          th2 + PI / 2,
-          1 - 0.7 * ex,
-          1 - 0.7 * ex,
-          seg(t, st2, st2 + 0.08) * (1 - clamp(ex * 1.6, 0, 1)),
-          ol.ch === '·' ? OR : TX,
-        );
-        if (ex > 0) {
-          ctx.globalAlpha = 0.55 * clamp(ex * 2, 0, 1);
-          dot(lx, ly, L.g * 0.14, TX);
-          ctx.globalAlpha = 1;
+        const la = seg(t, st2, st2 + 0.08) * (1 - clamp(ex * 1.6, 0, 1));
+        if (la > 0.002) {
+          const sp = letter(ol.ch, ol.ch === '·' ? OR : TX);
+          const k2 = 1 - 0.7 * ex;
+          const rot2 = th2 + PI / 2;
+          const c2 = Math.cos(rot2) * k2 * L.dpr;
+          const s2 = Math.sin(rot2) * k2 * L.dpr;
+          ctx.globalAlpha = la;
+          ctx.setTransform(c2, s2, -s2, c2, lx * L.dpr, ly * L.dpr);
+          ctx.drawImage(sp.c, -sp.w / 2, -sp.h / 2, sp.w, sp.h);
         }
+        if (ex > 0) odx.push(lx, ly, clamp(ex * 2, 0, 1));
       }
+      ctx.setTransform(L.dpr, 0, 0, L.dpr, 0, 0);
+      // буквы рассыпаются в точки — те же точки, что дальше станут растром
+      const dc = disc();
+      const orr = L.g * 0.14;
+      for (i = 0; i < odx.length; i += 3) {
+        ctx.globalAlpha = 0.55 * odx[i + 2];
+        ctx.drawImage(dc.c, odx[i] - orr, odx[i + 1] - orr, orr * 2, orr * 2);
+      }
+      odx.length = 0;
+      ctx.globalAlpha = 1;
     }
 
     /* 5 · растр: волна точек от оранжевой, потом точки становятся окнами в приложение */
@@ -834,7 +873,15 @@
         ctx.globalCompositeOperation = 'destination-out';
         ctx.fillStyle = '#000';
         ctx.beginPath();
+        // внутри волны окна уже полного размера и сливаются (радиус 0.74g > g/√2) — там одно большое
+        // окно вместо сотен кругов; по отдельности рисуется только кромка
+        const Rin = F2 - 6 * g;
+        if (Rin > 0) {
+          ctx.moveTo(cx + Rin, cy);
+          ctx.arc(cx, cy, Rin, 0, 2 * PI);
+        }
         for (i = 0; i < grid.length; i += 3) {
+          if (grid[i + 2] + 0.74 * g < Rin) continue;
           const hr = 0.74 * g * clamp((F2 - grid[i + 2]) / (5 * g), 0, 1);
           if (hr > 0.3) {
             ctx.moveTo(grid[i] + hr, grid[i + 1]);
@@ -844,9 +891,8 @@
         ctx.fill();
         ctx.globalCompositeOperation = 'source-over';
       }
-      ctx.fillStyle = TX;
       ctx.globalAlpha = 0.5;
-      ctx.beginPath();
+      const ds = disc();
       for (i = 0; i < grid.length; i += 3) {
         const d = grid[i + 2];
         if (F2 - d > 0) continue;
@@ -855,10 +901,8 @@
         const crest = 1 + 0.9 * Math.exp(-(((F1 - d) / (2 * g)) ** 2));
         const near = 1 + 1.4 * Math.exp(-d / (5 * g));
         const rd = g * 0.12 * gr * crest * near;
-        ctx.moveTo(grid[i] + rd, grid[i + 1]);
-        ctx.arc(grid[i], grid[i + 1], rd, 0, 2 * PI);
+        if (rd > 0.15) ctx.drawImage(ds.c, grid[i] - rd, grid[i + 1] - rd, rd * 2, rd * 2);
       }
-      ctx.fill();
       ctx.globalAlpha = 1;
     }
 

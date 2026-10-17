@@ -347,4 +347,21 @@ describe('стартовая заставка', () => {
     const seek = (window as unknown as { __introSeek?: (t: number) => void }).__introSeek;
     for (let t = 0; t <= 8.4; t += 1 / 60) expect(() => seek?.(t)).not.toThrow();
   });
+
+  it('буквы кольца и точки растра рисуются заготовками один раз, а не каждый кадр', async () => {
+    history.replaceState(null, '', '/?intro=full:t:0');
+    await run();
+    const seek = (window as unknown as { __introSeek?: (t: number) => void }).__introSeek;
+    const getContext = vi.mocked(HTMLCanvasElement.prototype.getContext);
+    const film = () => {
+      for (let t = 0; t <= 8.4; t += 1 / 60) seek?.(t);
+    };
+    const before = getContext.mock.calls.length;
+    film();
+    const made = getContext.mock.calls.length - before;
+    expect(made).toBeGreaterThan(1); // заготовки появились
+    expect(made).toBeLessThan(30); // по одной на букву и цвет, а не на кадр
+    film();
+    expect(getContext.mock.calls.length - before).toBe(made); // второй прогон — ни одной новой
+  });
 });
