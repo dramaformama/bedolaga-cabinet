@@ -130,6 +130,9 @@ export function AppShell({ children }: AppShellProps) {
         to={path}
         onClick={handleNavClick}
         aria-label={label}
+        // Сюда в конце заставки садится оранжевая точка (src/intro/intro.js).
+        data-intro-nav=""
+        aria-current={active ? 'page' : undefined}
         className={cn(
           'relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors duration-200',
           active

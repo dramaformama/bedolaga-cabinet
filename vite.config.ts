@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import packageJson from './package.json' with { type: 'json' };
 import { brandingHtml } from './vite-plugins/brandingHtml.ts';
+import { introInline } from './vite-plugins/introInline.ts';
 
 // Vendor-чанки: [имя, какие модули в него идут]. Порядок = приоритет группы.
 // Rolldown по умолчанию забирает в группу и все зависимости её модулей, поэтому
@@ -47,6 +48,7 @@ export default defineConfig(({ mode }) => {
         name: env.VITE_APP_NAME ?? '',
         apiUrl: env.VITE_API_URL ?? '',
       }),
+      introInline(path.resolve(import.meta.dirname, 'src/intro/intro.js')),
     ],
     define: {
       __APP_VERSION__: JSON.stringify(packageJson.version),
