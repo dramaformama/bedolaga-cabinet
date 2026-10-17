@@ -353,10 +353,14 @@
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
     const W = window.innerWidth;
     const H = window.innerHeight;
-    cv.width = Math.round(W * DPR);
-    cv.height = Math.round(H * DPR);
-    cv.style.width = `${W}px`;
-    cv.style.height = `${H}px`;
+    // Холст пересоздаём, только если размер правда изменился: Telegram при старте шлёт
+    // подряд несколько событий resize (expand, safe area), а пересоздание сбрасывает кадр.
+    if (cv.width !== Math.round(W * DPR) || cv.height !== Math.round(H * DPR)) {
+      cv.width = Math.round(W * DPR);
+      cv.height = Math.round(H * DPR);
+      cv.style.width = `${W}px`;
+      cv.style.height = `${H}px`;
+    }
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     const u = Math.min(W / 1100, H / 1000);
     L = { W: W, H: H, cx: W / 2, cy: H / 2, u: u };
@@ -422,7 +426,7 @@
       });
     }
 
-    const g = Math.max(14, 26 * u);
+    const g = Math.max(W < 700 ? 17 : 14, 26 * u); // на телефоне сетка реже: меньше окон на кадр раскрытия
     L.g = g;
     L.Dmax = Math.hypot(W / 2, H / 2) + g;
     L.grid = [];
@@ -902,6 +906,7 @@
   let readySent = false;
   let hIdx = 0;
   let breath = 0;
+  let holdN = 0;
 
   function finish() {
     if (done) return;
@@ -927,22 +932,29 @@
     const ready = appReady();
     readySince = ready ? readySince || now : 0;
     const settled = ready && now - readySince > 200;
+    let drawNow = true;
     if (film >= T.hold && !settled && held < 8) {
-      // приложение ещё грузится: держим кадр, точка «дышит»
+      // приложение ещё грузится: держим кадр, точка «дышит». Рисуем раз в три кадра (~20 к/с):
+      // дыхание медленное, а процессор нужен самой загрузке приложения.
       held += dt;
       breath = 0.5 - 0.5 * Math.cos(held * 4.2);
+      drawNow = holdN++ % 3 === 0;
     } else {
       breath *= Math.exp(-dt * 10); // дыхание затухает, а не обрывается
       const prev = film;
       film += dt;
-      if (!home && film >= T.home[0]) home = findHome();
+      // точку посадки пересчитываем на лету, пока она летит: вёрстка (безопасные зоны Telegram,
+      // панель) могла сдвинуться, и садиться надо туда, где пункт сейчас, а не где он был
+      if (film >= T.home[0] && film < T.home[1]) home = findHome() || home;
       while (hIdx < HAPTICS.length && HAPTICS[hIdx][0] <= film) {
         if (HAPTICS[hIdx][0] > prev - 0.25) haptic(HAPTICS[hIdx][1], HAPTICS[hIdx][2]);
         hIdx++;
       }
     }
     if (film >= T.end) return finish();
-    seek(film, breath);
+    // с начала раскрытия пропускать уже нечего, а кнопка закрывала бы нижнюю панель, куда садится точка
+    if (film >= T.flip[0] - 0.05 && skip.parentNode) skip.parentNode.removeChild(skip);
+    if (drawNow) seek(film, breath);
     sendReady();
     raf = requestAnimationFrame(frame);
   }

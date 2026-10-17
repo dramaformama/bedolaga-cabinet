@@ -230,6 +230,57 @@ describe('стартовая заставка', () => {
     expect(overlay()).toBeNull();
   });
 
+  it('событие resize без смены размера не пересоздаёт холст (Telegram шлёт их пачкой при старте)', async () => {
+    enterTelegram();
+    await run();
+    const setWidth = vi.spyOn(HTMLCanvasElement.prototype, 'width', 'set');
+    // слушатели от заставок прошлых тестов живы — считаем только холст текущей
+    const mine = () =>
+      setWidth.mock.contexts.filter((c) => c === document.querySelector('#bc-intro canvas')).length;
+    for (let i = 0; i < 5; i++) window.dispatchEvent(new Event('resize'));
+    expect(mine()).toBe(0);
+    vi.stubGlobal('innerWidth', 500);
+    window.dispatchEvent(new Event('resize'));
+    expect(mine()).toBe(1);
+  });
+
+  it('пока приложение грузится, заставка рисует не каждый кадр, чтобы не отнимать процессор у загрузки', async () => {
+    enterTelegram();
+    localStorage.setItem('bc-intro-full-seen', '1');
+    const fill = vi.fn();
+    vi.mocked(HTMLCanvasElement.prototype.getContext).mockImplementation(
+      () =>
+        new Proxy(
+          { measureText: (s: string) => ({ width: s.length * 55, actualBoundingBoxAscent: 50 }) },
+          {
+            get: (t: Record<string, unknown>, k: string) =>
+              k in t ? t[k] : k === 'fillRect' ? fill : () => {},
+            set: () => true,
+          },
+        ) as unknown as CanvasRenderingContext2D,
+    );
+    await run();
+    frames(2.7); // короткая дошла до точки ожидания; приложения нет
+    const before = fill.mock.calls.length;
+    const secs = frames(1);
+    const drawn = fill.mock.calls.length - before;
+    expect(secs).toBeGreaterThan(0.9);
+    expect(drawn).toBeGreaterThan(10);
+    expect(drawn).toBeLessThan(30); // ~20 из 60 кадров
+  });
+
+  it('кнопка «Пропустить» исчезает с началом раскрытия и не закрывает панель, куда садится точка', async () => {
+    enterTelegram();
+    renderApp(true);
+    await run();
+    expect(document.getElementById('bc-intro-skip')).not.toBeNull();
+    frames(6.5); // полная: раскрытие начинается около 7,2 с
+    expect(document.getElementById('bc-intro-skip')).not.toBeNull();
+    frames(1.3);
+    expect(document.getElementById('bc-intro-skip')).toBeNull();
+    expect(overlay()).not.toBeNull(); // сама заставка ещё идёт
+  });
+
   it('«Пропустить» сразу ведёт к раскрытию приложения', async () => {
     enterTelegram();
     renderApp(true);
