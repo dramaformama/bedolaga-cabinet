@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import TicketNotificationBell from '@/components/TicketNotificationBell';
 import { LogoutButton } from './LogoutButton';
+import { BrandName } from '@/components/BrandName';
 
 // Icons
 import {
@@ -108,6 +109,7 @@ export function AppHeader({
   });
 
   const appName = branding ? branding.name : FALLBACK_NAME;
+  const appNameMarkup = branding ? (branding.name_markup ?? branding.name) : FALLBACK_NAME;
   const logoLetter = branding?.logo_letter || FALLBACK_LOGO;
   const hasCustomLogo = branding?.has_custom_logo || false;
   const logoUrl = branding ? brandingApi.getLogoUrl(branding) : null;
@@ -217,7 +219,7 @@ export function AppHeader({
               </div>
               {appName && (
                 <span className="whitespace-nowrap text-base font-semibold text-dark-100">
-                  {appName}
+                  <BrandName markup={appNameMarkup} />
                 </span>
               )}
             </Link>

@@ -197,6 +197,10 @@
         var API = '__API_URL__';
         var HINT_KEY = 'cabinet-brand-hint';
 
+        // Метки цвета «{#FF8A00}» из имени бренда: во вкладке и ярлыке им не место.
+        function plainName(name) {
+          return name.replace(/\{#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\}/g, '');
+        }
         function applyName(name) {
           document.title = name;
           var metas = document.querySelectorAll(
@@ -216,7 +220,9 @@
         var hint = null;
         try {
           hint = JSON.parse(localStorage.getItem(HINT_KEY) || 'null');
-          if (hint && typeof hint.name === 'string' && hint.name.trim()) applyName(hint.name.trim());
+          if (hint && typeof hint.name === 'string' && plainName(hint.name).trim()) {
+            applyName(plainName(hint.name).trim());
+          }
           if (hint && typeof hint.icon === 'string' && hint.icon.indexOf('data:image/png;') === 0) {
             setIcon(hint.icon);
           }
@@ -234,7 +240,7 @@
           .then(function (brand) {
             if (!brand || typeof brand.name !== 'string') return;
             if (document.documentElement.hasAttribute('data-brand-ready')) return;
-            var name = brand.name.trim();
+            var name = plainName(brand.name).trim();
             var letter = firstLetter(
               typeof brand.logo_letter === 'string' ? brand.logo_letter : '',
               firstLetter(name, 'V')

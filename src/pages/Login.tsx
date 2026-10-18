@@ -32,6 +32,7 @@ import { useLegalConsentGate } from '../hooks/useLegalConsentGate';
 import { infoApi } from '../api/info';
 import type { LegalConsentConfig } from '../types';
 import { safeLocal, safeSession } from '../utils/safeStorage';
+import { BrandName } from '../components/BrandName';
 
 export default function Login() {
   const { t, i18n } = useTranslation();
@@ -173,6 +174,7 @@ export default function Login() {
   };
 
   const appName = branding ? branding.name : import.meta.env.VITE_APP_NAME || 'VPN';
+  const appNameMarkup = branding ? (branding.name_markup ?? branding.name) : appName;
   const appLogo = branding?.logo_letter || import.meta.env.VITE_APP_LOGO || 'V';
   const logoUrl = branding ? brandingApi.getLogoUrl(branding) : null;
 
@@ -407,7 +409,11 @@ export default function Login() {
               />
             )}
           </div>
-          {appName && <h1 className="text-2xl font-bold text-dark-50">{appName}</h1>}
+          {appName && (
+            <h1 className="text-2xl font-bold text-dark-50">
+              <BrandName markup={appNameMarkup} />
+            </h1>
+          )}
 
           {/* Referral Banner */}
           {referralCode && isEmailAuthEnabled && (

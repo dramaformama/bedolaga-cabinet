@@ -42,6 +42,7 @@ import { MobileBottomNav } from './MobileBottomNav';
 import { isMobileNavScreen, mobileNavItems } from './mobileNavRoutes';
 import { AppHeader } from './AppHeader';
 import { LogoutButton } from './LogoutButton';
+import { BrandName } from '@/components/BrandName';
 import { useBackgroundConsumer } from '@/components/backgrounds/BackgroundHost';
 
 interface AppShellProps {
@@ -60,7 +61,7 @@ export function AppShell({ children }: AppShellProps) {
   const { toggleTheme, isDark } = useTheme();
 
   // Extracted hooks
-  const { appName, logoLetter, hasCustomLogo, logoUrl } = useBranding();
+  const { appName, appNameMarkup, logoLetter, hasCustomLogo, logoUrl } = useBranding();
   const { referralEnabled, wheelEnabled, hasContests, hasPolls, giftEnabled } = useFeatureFlags();
   const { lite } = useLiteMode();
   useScrollRestoration();
@@ -216,7 +217,9 @@ export function AppShell({ children }: AppShellProps) {
                 />
               )}
             </div>
-            <span className="text-base font-semibold text-dark-100">{appName}</span>
+            <span className="text-base font-semibold text-dark-100">
+              <BrandName markup={appNameMarkup} />
+            </span>
           </Link>
 
           {/* Navigation — единая «капсула» (segmented control): все пункты видны
