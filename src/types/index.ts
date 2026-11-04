@@ -65,7 +65,15 @@ export interface ServerInfo {
   country_code: string | null;
 }
 
+export interface TrafficAccountingSummary {
+  traffic_accounting_mode?: 'legacy' | 'managed';
+  traffic_remaining_gb?: number | null;
+  base_traffic_remaining_gb?: number | null;
+  next_traffic_refresh_at?: string | null;
+}
+
 export interface TrafficPurchase {
+  remaining_gb?: number | null;
   id: number;
   traffic_gb: number;
   expires_at: string;
@@ -74,7 +82,7 @@ export interface TrafficPurchase {
   progress_percent: number;
 }
 
-export interface Subscription {
+export interface Subscription extends TrafficAccountingSummary {
   id: number;
   status: string;
   is_trial: boolean;
@@ -118,7 +126,7 @@ export interface SubscriptionStatusResponse {
 }
 
 // Multi-tariff subscription list item (from GET /cabinet/subscriptions)
-export interface SubscriptionListItem {
+export interface SubscriptionListItem extends TrafficAccountingSummary {
   id: number;
   status: string;
   tariff_id: number | null;
@@ -302,6 +310,7 @@ export interface Tariff {
   traffic_limit_label: string;
   is_unlimited_traffic: boolean;
   device_limit: number;
+  purchase_device_selection_supported?: boolean;
   base_device_limit?: number;
   extra_devices_count: number;
   servers_count: number;
@@ -336,6 +345,13 @@ export interface Tariff {
   daily_discount_percent?: number;
   original_price_per_day_kopeks?: number;
   custom_days_discount_percent?: number;
+  custom_days_pricing?: {
+    price_per_day_kopeks: number;
+    device_price_kopeks: number;
+    period_prices: Record<string, number>;
+    default_device_discount_percent: number;
+    discounts_by_days: Record<string, { period: number; devices: number }>;
+  };
   // Traffic reset
   traffic_reset_mode?: string;
   // Multi-tariff: already purchased by user
@@ -362,6 +378,7 @@ export interface TariffsPurchaseOptions {
   platega_recurrent_enabled?: boolean;
   lava_recurrent_enabled?: boolean;
   cashera_recurrent_enabled?: boolean;
+  cispay_recurrent_enabled?: boolean;
 }
 
 export interface ClassicPurchaseOptions {
@@ -432,6 +449,7 @@ export interface Transaction {
 export interface PaymentMethodOption {
   id: string;
   name: string;
+  min_amount_kopeks?: number;
   description?: string | null;
 }
 
@@ -757,6 +775,7 @@ export interface AppConfig {
 
 // Pending payment types
 export interface PendingPayment {
+  source?: 'provider' | 'landing';
   id: number;
   method: string;
   method_display: string;
@@ -867,6 +886,7 @@ export interface TicketSettings {
 export interface PaymentMethodSubOptionInfo {
   id: string;
   name: string;
+  is_provider_enabled?: boolean;
 }
 
 export interface PaymentMethodConfig {

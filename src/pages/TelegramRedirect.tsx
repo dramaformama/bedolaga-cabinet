@@ -1,3 +1,4 @@
+import { getLocalizedApiErrorMessage } from '../utils/api-error-display';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,6 @@ import { safeLocal, safeSession } from '../utils/safeStorage';
 import { useLegalConsentGate } from '../hooks/useLegalConsentGate';
 import LegalConsentGate from '../components/LegalConsentGate';
 import { BrandName } from '../components/BrandName';
-import { getApiErrorMessage } from '../utils/api-error';
 
 const MAX_RETRY_ATTEMPTS = 3;
 const RETRY_COUNT_KEY = 'telegram_redirect_retry_count';
@@ -106,7 +106,7 @@ export default function TelegramRedirect() {
           return;
         }
         console.error('Telegram auth failed:', err);
-        setErrorMessage(getApiErrorMessage(err, t('auth.telegramRequired')));
+        setErrorMessage(getLocalizedApiErrorMessage(err, t('auth.telegramRequired'), t));
         setStatus('error');
       }
     };

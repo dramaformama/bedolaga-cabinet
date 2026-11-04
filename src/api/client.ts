@@ -7,7 +7,7 @@ import {
   safeRedirectToLogin,
 } from '../utils/token';
 import { useBlockingStore } from '../store/blocking';
-import { reportPossibleBackendDown, markBackendReached } from './health';
+import { isBackendUnavailableError, reportPossibleBackendDown, markBackendReached } from './health';
 import { API } from '../config/constants';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
@@ -227,6 +227,11 @@ apiClient.interceptors.response.use(
         message: detail.message,
         reason: detail.reason,
       });
+      return Promise.reject(error);
+    }
+
+    if (isBackendUnavailableError(error)) {
+      void reportPossibleBackendDown();
       return Promise.reject(error);
     }
 
